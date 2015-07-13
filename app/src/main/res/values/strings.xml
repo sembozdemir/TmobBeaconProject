@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_place_beacon">PlaceBeaconActivity</string>
+    <string name="title_activity_measure_beacon_power">MeasureBeaconPowerActivity</string>
 </resources>
