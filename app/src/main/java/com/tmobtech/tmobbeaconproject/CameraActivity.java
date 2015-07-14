@@ -29,7 +29,7 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_IMAGE = 1;
 
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Baceon Camera";
+    private static final String IMAGE_DIRECTORY_NAME = "Beacon Camera";
 
     private Uri fileUri; // file url to store image/video
 
