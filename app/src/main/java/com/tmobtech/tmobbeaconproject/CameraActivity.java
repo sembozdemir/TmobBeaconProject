@@ -35,7 +35,7 @@ public class CameraActivity extends Activity {
 
     private ImageView imgPreview;
     private VideoView videoPreview;
-    private Button btnCapturePicture;
+    private Button btnCapturePicture, btnGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class CameraActivity extends Activity {
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
         videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
-
+        btnGallery = (Button) findViewById(R.id.btnFromGallery);
 
         /**
          * Capture image button click event
@@ -56,6 +56,21 @@ public class CameraActivity extends Activity {
             public void onClick(View v) {
                 // capture picture
                 captureImage();
+            }
+        });
+
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent galleryIntent = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(galleryIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+
+
+
             }
         });
 
@@ -131,7 +146,7 @@ public class CameraActivity extends Activity {
 
 
                 previewCapturedImage();
-                Intent intent = new Intent(this,PlaceBeaconActivity.class);
+                Intent intent = new Intent(this, PlaceBeaconActivity.class);
                 intent.putExtra("imageUrl", fileUri);
                 startActivity(intent);
 
@@ -211,7 +226,7 @@ public class CameraActivity extends Activity {
         if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
                     + "IMG_" + timeStamp + ".jpg");
-        }  else {
+        } else {
             return null;
         }
 
