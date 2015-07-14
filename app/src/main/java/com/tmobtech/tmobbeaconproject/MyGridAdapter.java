@@ -1,6 +1,7 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
  * Created by semih on 13.07.2015.
  */
 public class MyGridAdapter extends BaseAdapter {
+    private static final String LOG_TAG = MyGridAdapter.class.getSimpleName();
     private Context mContext;
     private final ArrayList<BeaconMap> beaconMaps;
 
@@ -50,7 +52,12 @@ public class MyGridAdapter extends BaseAdapter {
             TextView textViewMapDesc = (TextView) grid.findViewById(R.id.textView_map_desc);
             textViewMapDesc.setText(beaconMaps.get(position).getName());
             ImageView imageViewMap = (ImageView) grid.findViewById(R.id.imageView_map);
-            Picasso.with(mContext).load(R.drawable.image1).into(imageViewMap);
+            Log.d(LOG_TAG, "On Adapter: getView(): " + beaconMaps.get(position).getImagePath());
+            Picasso.with(mContext)
+                    .load(beaconMaps.get(position).getImagePath())
+                    .resize(100, 100)
+                    .centerCrop()
+                    .into(imageViewMap);
         } else {
             grid = convertView;
         }

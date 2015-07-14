@@ -3,7 +3,6 @@ package com.tmobtech.tmobbeaconproject;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -45,12 +44,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        // Create grid adapter and set it
-        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
-        MyGridAdapter myGridAdapter = new MyGridAdapter(this, beaconMaps);
-
-        mGridView.setAdapter(myGridAdapter);
-
         // set OnItemClickListener for grid items
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,6 +52,23 @@ public class MainActivity extends ActionBarActivity {
                 onMapSelected(beaconMap);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Create grid adapter and set it
+        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
+        MyGridAdapter myGridAdapter = new MyGridAdapter(this, beaconMaps);
+
+        mGridView.setAdapter(myGridAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mDbHelper.close();
     }
 
     private ArrayList<BeaconMap> getBeaconMapsArray() {
@@ -72,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
                 beaconMapArrayList.add(beaconMap);
             } while (cursor.moveToNext());
         }
+        cursor.close();
 
         return beaconMapArrayList;
     }
@@ -79,8 +90,7 @@ public class MainActivity extends ActionBarActivity {
     private void onMapSelected(BeaconMap beaconMap) {
         Toast.makeText(this, beaconMap.getName() + " selected", Toast.LENGTH_LONG).show();
 
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath();
-        Log.d(LOG_TAG, path);
+        Log.d(LOG_TAG, beaconMap.getImagePath());
     }
 
     private void addNewMap() {

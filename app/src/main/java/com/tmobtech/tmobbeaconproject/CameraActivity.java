@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +25,7 @@ import java.util.Locale;
 
 
 public class CameraActivity extends Activity {
+    private static final String LOG_TAG = CameraActivity.class.getSimpleName();
 
     // Activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -36,6 +39,7 @@ public class CameraActivity extends Activity {
     private ImageView imgPreview;
     private VideoView videoPreview;
     private Button btnCapturePicture, btnGallery;
+    private MyDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,8 @@ public class CameraActivity extends Activity {
         videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
         btnGallery = (Button) findViewById(R.id.btnFromGallery);
+
+        mDbHelper = new MyDbHelper(this);
 
         /**
          * Capture image button click event
@@ -83,6 +89,12 @@ public class CameraActivity extends Activity {
             // will close the app if the device does't have camera
             finish();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mDbHelper.close();
     }
 
     /**
@@ -146,8 +158,11 @@ public class CameraActivity extends Activity {
 
 
                 previewCapturedImage();
+                // add to database
+                Log.d(LOG_TAG, fileUri.toString());
+                long mapId = mDbHelper.insertMap("Deneme", fileUri.toString());
                 Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                intent.putExtra("imageUrl", fileUri);
+                intent.putExtra("mapId", mapId);
                 startActivity(intent);
 
             } else if (resultCode == RESULT_CANCELED) {

@@ -11,7 +11,7 @@ import android.util.Log;
  * Created by semih on 14.07.2015.
  */
 public class MyDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String DATABASE_NAME = "beaconmap.db";
     public static final String TABLE_MAPS_NAME = "maps";
