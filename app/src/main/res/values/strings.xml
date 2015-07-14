@@ -6,4 +6,7 @@
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_place_beacon">PlaceBeaconActivity</string>
     <string name="title_activity_measure_beacon_power">MeasureBeaconPowerActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+
 </resources>
