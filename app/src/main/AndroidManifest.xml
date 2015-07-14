@@ -15,6 +15,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".CameraActivity"
@@ -23,10 +24,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tmobtech.tmobbeaconproject.MainActivity" />
+
         </activity>
         <activity
             android:name=".PlaceBeaconActivity"
             android:label="@string/title_activity_place_beacon" >
+
         </activity>
         <activity
             android:name=".MeasureBeaconPowerActivity"
