@@ -5,11 +5,11 @@ package com.tmobtech.tmobbeaconproject;
  */
 public class BeaconMap {
     private String name;
-    private Integer imageId; // TODO: it is for dummy data. Use database later
+    private String imagePath; // TODO: it is for dummy data. Use database later
 
-    public BeaconMap(String name, Integer imageId) {
+    public BeaconMap(String name, String imagePath) {
         this.name = name;
-        this.imageId = imageId;
+        this.imagePath = imagePath;
     }
 
     public String getName() {
@@ -20,11 +20,11 @@ public class BeaconMap {
         this.name = name;
     }
 
-    public Integer getImageId() {
-        return imageId;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

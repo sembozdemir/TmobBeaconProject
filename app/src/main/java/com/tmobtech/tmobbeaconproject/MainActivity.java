@@ -1,6 +1,7 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -13,8 +14,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -22,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private FloatingActionButton mFab;
     private GridView mGridView;
+    private MyDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,9 @@ public class MainActivity extends ActionBarActivity {
         // Initiliaze View Components
         initViews();
 
+        // Get Database Helper
+        mDbHelper = new MyDbHelper(this);
+
         // set OnClickListener for Floating Action Button
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,15 +45,8 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        // Create Dummy Data for now
-        BeaconMap[] beaconMapArray = {
-                new BeaconMap("XX Map", R.drawable.image1),
-                new BeaconMap("YY Map", R.drawable.image1),
-                new BeaconMap("ZZ Map", R.drawable.image1)
-        };
-
         // Create grid adapter and set it
-        ArrayList<BeaconMap> beaconMaps = new ArrayList<BeaconMap>(Arrays.asList(beaconMapArray));
+        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
         MyGridAdapter myGridAdapter = new MyGridAdapter(this, beaconMaps);
 
         mGridView.setAdapter(myGridAdapter);
@@ -60,6 +59,21 @@ public class MainActivity extends ActionBarActivity {
                 onMapSelected(beaconMap);
             }
         });
+    }
+
+    private ArrayList<BeaconMap> getBeaconMapsArray() {
+        ArrayList<BeaconMap> beaconMapArrayList = new ArrayList<BeaconMap>();
+        Cursor cursor = mDbHelper.getMaps();
+        if (cursor.moveToFirst()) {
+            do {
+                BeaconMap beaconMap = new BeaconMap(
+                        cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_NAME)),
+                        cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH)));
+                beaconMapArrayList.add(beaconMap);
+            } while (cursor.moveToNext());
+        }
+
+        return beaconMapArrayList;
     }
 
     private void onMapSelected(BeaconMap beaconMap) {
