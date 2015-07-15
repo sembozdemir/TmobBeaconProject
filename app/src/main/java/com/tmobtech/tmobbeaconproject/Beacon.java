@@ -8,6 +8,4 @@ public class Beacon {
     public String macAdress;
     public float apsis;
     public float ordinat;
-    public long mapId;
-
 }

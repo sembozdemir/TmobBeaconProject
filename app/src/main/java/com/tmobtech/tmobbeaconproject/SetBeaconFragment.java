@@ -50,13 +50,14 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
+        frameLayout=(FrameLayout)view.findViewById(R.id.frame2);
         initialize();
         mapImageView = (ImageView) view.findViewById(R.id.imageView);
 
         try {
             imagePath = placeBeaconActivity.getImagePath();
             mapId = placeBeaconActivity.getMapID();
-            Cursor cursor = myDbHelper.getBeaconsAtMap(22);
+            Cursor cursor = myDbHelper.getBeaconsAtMap(mapId);
             if (cursor.moveToFirst()) {
                 do {
                     try {
@@ -83,6 +84,13 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
 
         try {
+            if (listBeacon.size()>0)
+            {
+
+                for (int i=0;i<listBeacon.size();i++)
+                    yerlestir(listBeacon.get(i));
+
+            }
 
 
         } catch (Exception e) {
@@ -122,6 +130,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         listBeacon = new ArrayList<>();
 
 
+
     }
 
 
@@ -132,15 +141,14 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         if (v.getId() == mapImageView.getId()) {
 
 
-            dialog = new Dialog(getActivity());
-            dialog.setTitle("Beacon Tanimlama");
-            dialog.setContentView(R.layout.dialog);
+            if (dialog==null)
+            dialogCreate();
+            dialogCreate();
             dialog.show();
-            kaydetDialogBtn = (Button) dialog.findViewById(R.id.button);
-            silDialogBtn = (Button) dialog.findViewById(R.id.button2);
 
 
-            markerName = (EditText) dialog.findViewById(R.id.editText);
+
+
             x = event.getX();
             y = event.getY();
             kaydetDialogBtn.setOnClickListener(this);
@@ -169,55 +177,115 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         if (v.getId() == kaydetDialogBtn.getId()) {
 
-            frameLayout = (FrameLayout) getActivity().findViewById(R.id.frame2);
+            kaydet();
+        }
 
-            View markerView = inflater.inflate(R.layout.markerframelayout, null);
-            markerView.setTag(markerName.getText());
+    }
+
+    private void kaydet ()
+    {
 
 
-            Log.e("X=", x + "");
+        View markerView = inflater.inflate(R.layout.markerframelayout, null);
+        markerView.setTag(markerName.getText());
 
 
-            markerView.setX(x - 64);
-            markerView.setY(y - 64);
-            frameLayout.addView(markerView, layoutParams1);
-            try {
-                mapId = placeBeaconActivity.getMapID();
-            } catch (Exception e) {
-                Log.e("MapIdError", "MapIdError");
+        Log.e("X=", x + "");
+
+
+        markerView.setX(x - 64);
+        markerView.setY(y - 64);
+        frameLayout.addView(markerView, layoutParams1);
+        try {
+            mapId = placeBeaconActivity.getMapID();
+        } catch (Exception e) {
+            Log.e("MapIdError", "MapIdError");
+        }
+
+        try {
+            Log.e("MapID=", mapId + "");
+            myDbHelper.insertBeacon(markerName.getText().toString(), "asd", markerView.getX(), markerView.getY(), mapId);
+        } catch (Exception e) {
+            Log.e("SQLError", e.toString());
+        }
+
+        dialog.cancel();
+
+        markerView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                markerViewClass = v;
+                kaydetDialogBtn.setText("Update");
+                kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v.setTag(markerName.getText());
+                        dialog.cancel();
+
+                    }
+                });
+
+                dialog.show();
+
+
             }
+        });
 
-            try {
-                Log.e("MapID=", mapId + "");
-                myDbHelper.insertBeacon(markerName.getText().toString(), "asd", 2, 2, mapId);
-            } catch (Exception e) {
-                Log.e("SQLError", e.toString());
-            }
+    }
 
-            dialog.cancel();
+    private void yerlestir (final Beacon beacon)
+    {
+        try{
+            Log.e("Yerlestir", "Yerlestir");
 
-            markerView.setOnClickListener(new View.OnClickListener() {
+            View view=inflater.inflate(R.layout.markerframelayout,null);
+            view.setTag(beacon.beaconName);
+            view.setX(beacon.apsis);
+            view.setY(beacon.ordinat);
+            frameLayout.addView(view, layoutParams1);
 
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    markerViewClass = v;
+
+
+
+                    if (dialog==null)
+                        dialogCreate();
                     kaydetDialogBtn.setText("Update");
+                    markerName.setText(beacon.beaconName);
+                    dialog.show();
+
                     kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            v.setTag(markerName.getText());
-                            dialog.cancel();
-
+                            kaydet();
                         }
                     });
-
-                    dialog.show();
-
 
                 }
             });
 
-        }
 
+
+
+        }
+        catch (Exception e){Log.e("YerlestirError",e.toString());}
+
+
+
+
+    }
+
+    private void dialogCreate()
+
+    {
+        dialog = new Dialog(getActivity());
+        dialog.setTitle("Beacon Tanimlama");
+        dialog.setContentView(R.layout.dialog);
+        kaydetDialogBtn = (Button) dialog.findViewById(R.id.button);
+        silDialogBtn = (Button) dialog.findViewById(R.id.button2);
+        markerName = (EditText) dialog.findViewById(R.id.editText);
     }
 }
