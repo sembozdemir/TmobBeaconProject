@@ -103,7 +103,7 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
         final View marker=v;
 
 
-        frameLayout=(FrameLayout)getActivity().findViewById(R.id.frame1);
+        frameLayout=(FrameLayout)getActivity().findViewById(R.id.frame2);
         if (v.getId()==mapImageView.getId())
         {
 
@@ -134,10 +134,10 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
 
 
                     Log.e("X=", x + "");
-                    markerView.setX(x);
 
-                    markerView.setY(x);
-                    markerView.setY(y);
+
+                    markerView.setX(x-64);
+                    markerView.setY(y-64);
                     frameLayout.addView(markerView,layoutParams1);
                     dialog.cancel();
 
