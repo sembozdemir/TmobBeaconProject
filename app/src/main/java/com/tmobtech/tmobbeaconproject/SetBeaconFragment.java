@@ -31,13 +31,13 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
     static float x;
     static float y;
     ImageView mapImageView;
-    Bitmap marker;
-    Bitmap mapBitmap;
-    long mapID;
-    Intent intent;
     MyDbHelper myDbHelper;
     Cursor cursor;
     String imagePath;
+    FrameLayout.LayoutParams layoutParams1;
+    LayoutInflater inflater;
+    long mapId;
+    PlaceBeaconActivity placeBeaconActivity;
 
     @Nullable
     @Override
@@ -48,7 +48,8 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
         mapImageView=(ImageView)view.findViewById(R.id.imageView);
 
 
-        imagePath = new PlaceBeaconActivity().getImagePath();
+        imagePath = placeBeaconActivity.getImagePath();
+
 
 
 
@@ -86,9 +87,14 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
 
     private void initialize()
     {
+       layoutParams1=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+         inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
-      //  myDbHelper=new MyDbHelper(getActivity());
+        placeBeaconActivity=new PlaceBeaconActivity();
+
+        myDbHelper=new MyDbHelper(getActivity());
 
 
 
@@ -100,18 +106,19 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
     public boolean onTouch(View v, MotionEvent event){
 
 
-        final View marker=v;
 
 
-        frameLayout=(FrameLayout)getActivity().findViewById(R.id.frame2);
+
+
         if (v.getId()==mapImageView.getId())
         {
+
 
             final Dialog dialog=new Dialog(getActivity());
             dialog.setTitle("Beacon Tanimlama");
             dialog.setContentView(R.layout.dialog);
             dialog.show();
-            Button kaydetDialogBtn=(Button)dialog.findViewById(R.id.button);
+            final Button kaydetDialogBtn=(Button)dialog.findViewById(R.id.button);
             Button silDialogBtn=(Button)dialog.findViewById(R.id.button2);
 
 
@@ -124,9 +131,8 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
                 public void onClick(View v) {
 
 
-                    FrameLayout.LayoutParams layoutParams1=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    frameLayout=(FrameLayout)getActivity().findViewById(R.id.frame2);
 
-                    LayoutInflater inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View markerView=inflater.inflate(R.layout.markerframelayout,null);
                     markerView.setTag(markerName.getText());
 
@@ -136,17 +142,34 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
                     Log.e("X=", x + "");
 
 
-                    markerView.setX(x-64);
+                    markerView.setX(x - 64);
                     markerView.setY(y-64);
                     frameLayout.addView(markerView,layoutParams1);
+                    try {
+                        mapId=placeBeaconActivity.getMapID();
+                    }
+                    catch (Exception e){Log.e("MapIdError","MapIdError");}
+
                     dialog.cancel();
 
                     markerView.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View v) {
-                            markerViewClass=v;
+                            markerViewClass = v;
+                            kaydetDialogBtn.setText("Update");
+                            kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    v.setTag(markerName.getText());
+                                    dialog.cancel();
+
+                                }
+                            });
+
                             dialog.show();
+
+
                         }
                     });
 
@@ -165,13 +188,14 @@ public class SetBeaconFragment extends Fragment implements  View.OnTouchListener
                         parentView.removeView(markerViewClass);
                         dialog.cancel();
                     }
-                    catch (Exception e){
-                        Log.e("Eror Remove View :",e.toString());
+                    catch (Exception e) {
+                        Log.e("Eror Remove View :", e.toString());
                     }
 
 
                 }
             });
+
 
 
 
