@@ -159,11 +159,11 @@ public class CameraActivity extends Activity {
 
                 previewCapturedImage();
                 // add to database
-                Log.d(LOG_TAG, fileUri.toString());
+
                 long mapId = mDbHelper.insertMap("Deneme", fileUri.toString());
                 Intent intent = new Intent(this, PlaceBeaconActivity.class);
                 intent.putExtra("mapId", mapId);
-                Log.e("Camera mapID=",mapId+"");
+
                 startActivity(intent);
 
             } else if (resultCode == RESULT_CANCELED) {

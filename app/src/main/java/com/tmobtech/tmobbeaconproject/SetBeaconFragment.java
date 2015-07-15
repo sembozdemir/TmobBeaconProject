@@ -1,44 +1,30 @@
 package com.tmobtech.tmobbeaconproject;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.media.Image;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
-import android.view.ViewParent;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
-import javax.security.auth.login.LoginException;
-
-
-public class PlaceBeaconActivity extends ActionBarActivity  {
+/**
+ * Created by Kerim on 15.7.2015.
+ */
+public class SetBeaconFragment extends Fragment implements  View.OnTouchListener {
 
     View markerViewClass;
     FrameLayout frameLayout;
@@ -51,28 +37,18 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
     Intent intent;
     MyDbHelper myDbHelper;
     Cursor cursor;
-    static String imagePath;
-    PagerAdapter pagerAdapter;
-    ViewPager viewPager;
+    String imagePath;
 
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_beacon);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-
+        View view=inflater.inflate(R.layout.setbeaconfragment,null) ;
         initialize();
+        mapImageView=(ImageView)view.findViewById(R.id.imageView);
 
 
-
-
-       intent=getIntent();
-
-
-        mapID=intent.getLongExtra("mapId", 0);
-
+        imagePath = new PlaceBeaconActivity().getImagePath();
 
 
 
@@ -80,81 +56,46 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
 
         //Imageview icine ornek bir resim koydum
 
-       // mapImageView.setImageResource(R.drawable.map2);
+        // mapImageView.setImageResource(R.drawable.map2);
         //ImageView Long Click Listener
+        mapImageView.setOnTouchListener(this);
 
 
-        cursor=myDbHelper.getMapFromId(mapID);
+
 
 
         try {
-            if (cursor.moveToFirst())
-                do {
-                    imagePath=cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
-                }
-                while (cursor.moveToNext());
-
-            Picasso.with(this)
+            Picasso.with(getActivity())
                     .load(imagePath).fit().centerCrop()
                     .into(mapImageView);
-
 
         }
         catch (Exception e)
         {
-            Log.e("DATABASE ERROR",e.toString());
+            Log.e("BeaconFragmenError",e.toString());
         }
+
+
 
         Log.e("ImagePath=",imagePath);
 
-        viewPager=(ViewPager)findViewById(R.id.viewPager);
-        FragmentManager fm=getSupportFragmentManager() ;
-        pagerAdapter=new PageAdapter(PlaceBeaconActivity.this,fm);
-        viewPager.setAdapter(pagerAdapter);
+
+
+        return view;
     }
 
-
-
-
-
-    private void initialize() {
-
-
-
-        myDbHelper = new MyDbHelper(PlaceBeaconActivity.this);
-
-
-    }
-
-    public String getImagePath()
+    private void initialize()
     {
-        return  imagePath;
+
+
+      //  myDbHelper=new MyDbHelper(getActivity());
+
+
+
+
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_place_beacon, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*
     @Override
     public boolean onTouch(View v, MotionEvent event){
 
@@ -162,11 +103,11 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
         final View marker=v;
 
 
-        frameLayout=(FrameLayout)findViewById(R.id.frame1);
+        frameLayout=(FrameLayout)getActivity().findViewById(R.id.frame1);
         if (v.getId()==mapImageView.getId())
         {
 
-            final Dialog dialog=new Dialog(PlaceBeaconActivity.this);
+            final Dialog dialog=new Dialog(getActivity());
             dialog.setTitle("Beacon Tanimlama");
             dialog.setContentView(R.layout.dialog);
             dialog.show();
@@ -185,7 +126,7 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
 
                     FrameLayout.LayoutParams layoutParams1=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                    LayoutInflater inflater=(LayoutInflater)PlaceBeaconActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    LayoutInflater inflater=(LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View markerView=inflater.inflate(R.layout.markerframelayout,null);
                     markerView.setTag(markerName.getText());
 
@@ -244,5 +185,4 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
 
         return false;
     }
-    */
 }
