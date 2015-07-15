@@ -246,10 +246,37 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 selectionArgs, null, null, null, null);
     }
 
-    public Cursor updateBeaconId (String beaconId){
-        return  null;
+    public int updateBeaconName(long beaconId, String newBeaconName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String[] whereArgs = new String[] {
+                "" + beaconId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BEACON_NAME, newBeaconName);
+        return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
     }
-    public  Cursor updateBeaconMacAdress(String beaconId){
-        return  null;
+
+    public int updateBeaconMacAddress(long beaconId, String newBeaconMacAddress){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String[] whereArgs = new String[] {
+                "" + beaconId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BEACON_MAC_ADDRESS, newBeaconMacAddress);
+        return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
+    }
+
+    public int updateBeaconCoordinate(long beaconId, float newApsis, float newOrdinat) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String[] whereArgs = new String[] {
+                "" + beaconId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BEACON_APSIS, newApsis);
+        values.put(COLUMN_BEACON_ORDINAT, newOrdinat);
+        return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
     }
 }
