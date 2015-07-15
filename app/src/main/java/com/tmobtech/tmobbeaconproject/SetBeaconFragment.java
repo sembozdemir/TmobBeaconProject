@@ -202,6 +202,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     markerView.getX(),
                     markerView.getY(),
                     mapId));
+            markerView.setBeacon(beacon);
         } catch (Exception e) {
             Log.e("SQLError", e.toString());
         }
