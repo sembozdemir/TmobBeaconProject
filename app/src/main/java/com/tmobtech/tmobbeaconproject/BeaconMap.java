@@ -4,12 +4,31 @@ package com.tmobtech.tmobbeaconproject;
  * Created by semih on 13.07.2015.
  */
 public class BeaconMap {
+    private long id;
     private String name;
-    private String imagePath; // TODO: it is for dummy data. Use database later
+    private String imagePath;
 
-    public BeaconMap(String name, String imagePath) {
+    public BeaconMap(long id, String name, String imagePath) {
+        this.id = id;
         this.name = name;
         this.imagePath = imagePath;
+    }
+
+    public BeaconMap(String imagePath, String name) {
+        this.imagePath = imagePath;
+        this.name = name;
+    }
+
+    public BeaconMap() {
+
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

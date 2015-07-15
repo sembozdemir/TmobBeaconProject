@@ -2,77 +2,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:baselineAligned="false"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <!-- Capture picture button -->
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Image Name"
-            android:imeOptions="actionDone" />
-
-        <Button
-            android:id="@+id/btnCapturePicture"
-
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            android:text="Capture"
-            android:layout_width="180dp"
-            android:layout_height="60dp"
-            android:background="@drawable/buttonshape"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:layout_marginBottom="10dp" />
-
-        <Button
-            android:id="@+id/btnFromGallery"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            android:text="Galeri"
-            android:layout_width="180dp"
-            android:layout_height="60dp"
-            android:background="@drawable/buttonshape"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:layout_marginBottom="10dp" />
+        <!-- To display picture taken -->
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone" />
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="fill_parent"
+        <!-- Capture picture button -->
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Preview"
-            android:padding="10dp"
-            android:textSize="15dp" />
+            android:hint="Give a name for your map..."
+            android:imeOptions="actionDone"
+            android:layout_weight="1" />
 
-        <!-- To display picture taken -->
-        <ImageView
-            android:id="@+id/imgPreview"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:text="Next"
+            android:textColor="@color/button_labels"
+            android:background="@color/button_normal"
+            android:id="@+id/button_next" />
 
 
     </LinearLayout>

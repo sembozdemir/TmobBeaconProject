@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
@@ -25,7 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements View.OnClickListener {
     private static final String LOG_TAG = CameraActivity.class.getSimpleName();
 
     // Activity request codes
@@ -37,60 +36,29 @@ public class CameraActivity extends Activity {
 
     private Uri fileUri; // file url to store image/video
 
-    private ImageView imgPreview;
-    private VideoView videoPreview;
-    private Button btnCapturePicture, btnGallery;
+    private ImageView mImgPreview;
+    private EditText mEditText;
+
     private MyDbHelper mDbHelper;
-    private EditText editText;
+    private BeaconMap mBeaconMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        imgPreview = (ImageView) findViewById(R.id.imgPreview);
-        btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
-        btnGallery = (Button) findViewById(R.id.btnFromGallery);
-        editText = (EditText) findViewById(R.id.editText);
+        initViews();
+
+        String action = getIntent().getStringExtra(Intent.EXTRA_TEXT);
         mDbHelper = new MyDbHelper(this);
+        mBeaconMap = new BeaconMap();
 
-        /**
-         * Capture image button click event
-         */
-        btnCapturePicture.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // capture picture
-                if (editText.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Image name cannot empty! ", Toast.LENGTH_LONG).show();
-                } else {
-                    captureImage();
-
-                }
-            }
-        });
-
-        btnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
-
-
-                // Intent galleryIntent = new Intent(
-                //       Intent.ACTION_PICK,
-                //     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                // startActivityForResult(galleryIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-
-
-            }
-        });
-
+        // if action is camera
+        if (action.equals(MainActivity.ACTION_CAMERA)) {
+            captureImage();
+        } else if (action.equals(MainActivity.ACTION_GALLERY)) { // if action is gallery
+            pickFromGallery();
+        }
 
         // Checking camera availability
         if (!isDeviceSupportCamera()) {
@@ -101,6 +69,14 @@ public class CameraActivity extends Activity {
             finish();
         }
     }
+
+    private void initViews() {
+        mImgPreview = (ImageView) findViewById(R.id.imgPreview);
+        mEditText = (EditText) findViewById(R.id.editText);
+        Button mNextButton = (Button) findViewById(R.id.button_next);
+        mNextButton.setOnClickListener(this);
+    }
+
 
     @Override
     protected void onStop() {
@@ -127,14 +103,16 @@ public class CameraActivity extends Activity {
      */
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
         // start the image capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+    }
+
+    private void pickFromGallery() {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, SELECT_PHOTO);
     }
 
     /**
@@ -168,34 +146,17 @@ public class CameraActivity extends Activity {
         if (requestCode == SELECT_PHOTO)
             if (resultCode == RESULT_OK) {
                 try {
-
                     Uri imageUri = data.getData();
-
-                    Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                    long mapId = mDbHelper.insertMap(editText.getText().toString(), imageUri.toString());
-                    intent.putExtra("mapId", mapId);
-                    Log.e("Camera mapID=", mapId + "");
-                    startActivity(intent);
+                    previewCapturedImage(imageUri);
+                    mBeaconMap.setImagePath(imageUri.toString());
                 } catch (Exception e) {
                     Log.e("Gallery ge select error", e.getMessage());
                 }
             }
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-
-
             if (resultCode == RESULT_OK) {
-
-
-                previewCapturedImage();
-
-                // add to database
-                Log.d(LOG_TAG, fileUri.toString());
-
-                Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                long mapId = mDbHelper.insertMap(editText.getText().toString(), fileUri.toString());
-                intent.putExtra("mapId", mapId);
-                Log.e("Camera mapID=", mapId + "");
-                startActivity(intent);
+                previewCapturedImage(fileUri);
+                mBeaconMap.setImagePath(fileUri.toString());
 
             } else if (resultCode == RESULT_CANCELED) {
 
@@ -214,12 +175,9 @@ public class CameraActivity extends Activity {
     /**
      * Display image from a path to ImageView
      */
-    private void previewCapturedImage() {
+    private void previewCapturedImage(Uri fileUri) {
         try {
-            // hide video preview
-            videoPreview.setVisibility(View.GONE);
-
-            imgPreview.setVisibility(View.VISIBLE);
+            mImgPreview.setVisibility(View.VISIBLE);
 
             // bimatp factory
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -232,7 +190,7 @@ public class CameraActivity extends Activity {
                     options);
             Log.d("GetPathResim", fileUri.getPath());
 
-            imgPreview.setImageBitmap(bitmap);
+            mImgPreview.setImageBitmap(bitmap);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -278,5 +236,32 @@ public class CameraActivity extends Activity {
         }
 
         return mediaFile;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_next:
+                handleEvent();
+                break;
+        }
+    }
+
+    private void handleEvent() {
+        if (mEditText.getText().toString().equals("")) {
+            Toast.makeText(this,"Please give a name for your map", Toast.LENGTH_LONG).show();
+        } else {
+            mBeaconMap.setName(mEditText.getText().toString());
+            addToDatabase();
+            Intent intent = new Intent(this, PlaceBeaconActivity.class);
+            intent.putExtra("mapId", mBeaconMap.getId());
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void addToDatabase() {
+        long mapId = mDbHelper.insertMap(mBeaconMap.getName(), mBeaconMap.getImagePath());
+        mBeaconMap.setId(mapId);
     }
 }

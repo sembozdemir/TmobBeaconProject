@@ -3,25 +3,26 @@ package com.tmobtech.tmobbeaconproject;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
-
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private FloatingActionButton mFab;
+
+    public static final String ACTION_CAMERA = "camera";
+    public static final String ACTION_GALLERY = "gallery";
+    private FloatingActionButton mFabCamera;
+    private FloatingActionButton mFabGallery;
     private GridView mGridView;
     private MyDbHelper mDbHelper;
 
@@ -37,10 +38,17 @@ public class MainActivity extends ActionBarActivity {
         mDbHelper = new MyDbHelper(this);
 
         // set OnClickListener for Floating Action Button
-        mFab.setOnClickListener(new View.OnClickListener() {
+        mFabCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewMap();
+                addFromCamera();
+            }
+        });
+
+        mFabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFromGallery();
             }
         });
 
@@ -77,6 +85,7 @@ public class MainActivity extends ActionBarActivity {
         if (cursor.moveToFirst()) {
             do {
                 BeaconMap beaconMap = new BeaconMap(
+                        cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_ID)),
                         cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_NAME)),
                         cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH)));
                 beaconMapArrayList.add(beaconMap);
@@ -88,19 +97,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void onMapSelected(BeaconMap beaconMap) {
-        Toast.makeText(this, beaconMap.getName() + " selected", Toast.LENGTH_LONG).show();
-
-        Log.d(LOG_TAG, beaconMap.getImagePath());
+        Intent placeBeaconIntent = new Intent(MainActivity.this, PlaceBeaconActivity.class);
+        placeBeaconIntent.putExtra("mapId", beaconMap.getId());
+        startActivity(placeBeaconIntent);
     }
 
-    private void addNewMap() {
+    private void addFromCamera() {
         Intent cameraIntent = new Intent(MainActivity.this, CameraActivity.class);
+        cameraIntent.putExtra(Intent.EXTRA_TEXT, ACTION_CAMERA);
         startActivity(cameraIntent);
+    }
+
+    private void addFromGallery() {
+        Intent galleryIntent = new Intent(MainActivity.this, CameraActivity.class);
+        galleryIntent.putExtra(Intent.EXTRA_TEXT, ACTION_GALLERY);
+        startActivity(galleryIntent);
     }
 
     private void initViews() {
         mGridView = (GridView) findViewById(R.id.gridview);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFabCamera = (FloatingActionButton) findViewById(R.id.fab_camera);
+        mFabGallery = (FloatingActionButton) findViewById(R.id.fab_gallery);
     }
 
     @Override
