@@ -164,10 +164,10 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnTou
 
 
                     Log.e("X=", x + "");
-                    markerView.setX(x-50);
+                    markerView.setX(x);
 
                     markerView.setY(x);
-                    markerView.setY(y-100);
+                    markerView.setY(y);
                     frameLayout.addView(markerView,layoutParams1);
                     dialog.cancel();
 
