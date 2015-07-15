@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -31,7 +30,7 @@ public class CameraActivity extends Activity {
     // Activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int MEDIA_TYPE_IMAGE = 1;
-    private static final int SELECT_PHOTO = 200;
+
     // directory name to store captured images and videos
     private static final String IMAGE_DIRECTORY_NAME = "Beacon Camera";
 
@@ -41,7 +40,6 @@ public class CameraActivity extends Activity {
     private VideoView videoPreview;
     private Button btnCapturePicture, btnGallery;
     private MyDbHelper mDbHelper;
-    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +47,10 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.activity_camera);
 
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
+        videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
         btnGallery = (Button) findViewById(R.id.btnFromGallery);
-        editText = (EditText) findViewById(R.id.editText);
+
         mDbHelper = new MyDbHelper(this);
 
         /**
@@ -62,12 +61,7 @@ public class CameraActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // capture picture
-                if (editText.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Image name cannot empty! ", Toast.LENGTH_LONG).show();
-                } else {
-                    captureImage();
-
-                }
+                captureImage();
             }
         });
 
@@ -75,17 +69,12 @@ public class CameraActivity extends Activity {
             @Override
             public void onClick(View v) {
 
+                Intent galleryIntent = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+                startActivityForResult(galleryIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
 
-
-                // Intent galleryIntent = new Intent(
-                //       Intent.ACTION_PICK,
-                //     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                // startActivityForResult(galleryIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
 
 
             }
@@ -128,7 +117,6 @@ public class CameraActivity extends Activity {
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -165,36 +153,17 @@ public class CameraActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
-        if (requestCode == SELECT_PHOTO)
-            if (resultCode == RESULT_OK) {
-                try {
-
-                    Uri imageUri = data.getData();
-
-                    Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                    long mapId = mDbHelper.insertMap(editText.getText().toString(), imageUri.toString());
-                    intent.putExtra("mapId", mapId);
-                    Log.e("Camera mapID=", mapId + "");
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Log.e("Gallery ge select error", e.getMessage());
-                }
-            }
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
-
-
             if (resultCode == RESULT_OK) {
 
 
                 previewCapturedImage();
-
                 // add to database
-                Log.d(LOG_TAG, fileUri.toString());
 
+                long mapId = mDbHelper.insertMap("Deneme", fileUri.toString());
                 Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                long mapId = mDbHelper.insertMap(editText.getText().toString(), fileUri.toString());
                 intent.putExtra("mapId", mapId);
-                Log.e("Camera mapID=", mapId + "");
+
                 startActivity(intent);
 
             } else if (resultCode == RESULT_CANCELED) {
