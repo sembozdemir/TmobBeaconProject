@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,11 +21,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+
+import javax.security.auth.login.LoginException;
 
 
 public class PlaceBeaconActivity extends ActionBarActivity implements View.OnTouchListener {
@@ -36,8 +43,11 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnTou
     ImageView mapImageView;
     Bitmap marker;
     Bitmap mapBitmap;
-    String imagePath;
+    long mapID;
     Intent intent;
+    MyDbHelper myDbHelper;
+    Cursor cursor;
+    String imagePath;
 
 
     @Override
@@ -49,16 +59,35 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnTou
        intent=getIntent();
 
 
+        mapID=intent.getLongExtra("mapId", 0);
         //Imageview icine ornek bir resim koydum
 
-        mapImageView.setImageResource(R.drawable.map2);
+       // mapImageView.setImageResource(R.drawable.map2);
         //ImageView Long Click Listener
         mapImageView.setOnTouchListener(this);
 
+        cursor=myDbHelper.getMapFromId(mapID);
 
 
+        try {
+            if (cursor.moveToFirst())
+                do {
+                    imagePath=cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
+                }
+                while (cursor.moveToNext());
+
+            Picasso.with(this)
+                    .load(imagePath).fit().centerCrop()
+                    .into(mapImageView);
 
 
+        }
+        catch (Exception e)
+        {
+            Log.e("DATABASE ERROR",e.toString());
+        }
+
+        Log.e("ImagePath=",imagePath);
 
     }
 
@@ -67,6 +96,7 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnTou
         mapImageView=(ImageView) findViewById(R.id.imageView);
 
 
+        myDbHelper=new MyDbHelper(PlaceBeaconActivity.this);
 
 
         marker=BitmapFactory.decodeResource(getResources(),R.drawable.map2);
