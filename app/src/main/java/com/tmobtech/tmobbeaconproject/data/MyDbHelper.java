@@ -279,4 +279,27 @@ public class MyDbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_BEACON_ORDINAT, newOrdinat);
         return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
     }
+
+    public int updatePlaceName(long placeId, String newPlaceName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String[] whereArgs = new String[] {
+                "" + placeId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLACE_NAME, newPlaceName);
+        return db.update(TABLE_PLACES_NAME, values, whereClause, whereArgs);
+    }
+
+    public int updatePlaceCoordinate(long placeId, float newApsis, float newOrdinat) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String[] whereArgs = new String[] {
+                "" + placeId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PLACE_APSIS, newApsis);
+        values.put(COLUMN_PLACE_ORDINAT, newOrdinat);
+        return db.update(TABLE_PLACES_NAME, values, whereClause, whereArgs);
+    }
 }
