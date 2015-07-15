@@ -245,4 +245,11 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 selection,
                 selectionArgs, null, null, null, null);
     }
+
+    public Cursor updateBeaconId (String beaconId){
+        return  null;
+    }
+    public  Cursor updateBeaconMacAdress(String beaconId){
+        return  null;
+    }
 }
