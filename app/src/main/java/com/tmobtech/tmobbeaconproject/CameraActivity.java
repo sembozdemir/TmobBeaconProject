@@ -147,8 +147,14 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             if (resultCode == RESULT_OK) {
                 try {
                     Uri imageUri = data.getData();
-                    previewCapturedImage(imageUri);
-                    mBeaconMap.setImagePath(imageUri.toString());
+                    Log.d("ImageUri : ", imageUri.toString());
+                    Intent intent = new Intent(this, PlaceBeaconActivity.class);
+                    long mapId = mDbHelper.insertMap(mEditText.getText().toString(),imageUri.toString());
+                    intent.putExtra("mapId",mapId);
+                    startActivity(intent);
+
+              //      previewCapturedImage(imageUri);
+                //    mBeaconMap.setImagePath(imageUri.toString());
                 } catch (Exception e) {
                     Log.e("Gallery ge select error", e.getMessage());
                 }
