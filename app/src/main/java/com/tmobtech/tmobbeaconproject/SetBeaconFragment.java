@@ -2,8 +2,11 @@ package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,22 +14,33 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.views.MarkerView;
 
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by Ozberk on 15.7.2015.
  */
-public class SetBeaconFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
+public class SetBeaconFragment extends Fragment implements View.OnTouchListener, View.OnClickListener{
 
     MarkerView markerViewClass;
     FrameLayout frameLayout;
@@ -34,6 +48,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     static float y;
     ImageView mapImageView;
     MyDbHelper myDbHelper;
+    List<org.altbeacon.beacon.Beacon> list;
+
 
     String imagePath;
     FrameLayout.LayoutParams layoutParams1;
@@ -43,8 +59,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     Button silDialogBtn;
     Dialog dialog;
     Button kaydetDialogBtn;
+    Button refreshBtn;
+    Spinner spinner;
     EditText markerName;
     List<Beacon> listBeacon;
+    FindBeacon findBeacon;
 
     @Nullable
     @Override
@@ -127,6 +146,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         listBeacon = new ArrayList<>();
 
+        findBeacon=new FindBeacon(getActivity());
+
+
 
     }
 
@@ -145,6 +167,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             y = event.getY();
             kaydetDialogBtn.setOnClickListener(this);
             silDialogBtn.setOnClickListener(this);
+            refreshBtn.setOnClickListener(this);
+
         }
 
 
@@ -162,6 +186,18 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             } catch (Exception e) {
                 Log.e("Eror Remove View :", e.toString());
             }
+        }
+
+        if (v.getId()==refreshBtn.getId())
+        {
+
+
+            list=findBeacon.ls;
+            com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter=new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(),list);
+            spinner.setAdapter(spinnerAdapter);
+
+
+
         }
 
         if (v.getId() == kaydetDialogBtn.getId()) {
@@ -301,6 +337,12 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         kaydetDialogBtn = (Button) dialog.findViewById(R.id.button);
         silDialogBtn = (Button) dialog.findViewById(R.id.button2);
         markerName = (EditText) dialog.findViewById(R.id.editText);
+        refreshBtn=(Button)dialog.findViewById(R.id.button3);
+        spinner=(Spinner)dialog.findViewById(R.id.spinner);
+
     }
+
+
+
 
 }
