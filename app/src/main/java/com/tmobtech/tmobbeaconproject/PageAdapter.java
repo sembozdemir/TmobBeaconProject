@@ -10,7 +10,7 @@ import android.view.View;
 import java.util.List;
 
 /**
- * Created by Kerim on 15.7.2015.
+ * Created by Ozberk on 15.7.2015.
  */
 public class PageAdapter extends FragmentPagerAdapter {
 

@@ -37,7 +37,9 @@ import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import javax.security.auth.login.LoginException;
 
-
+/**
+ * Created by Ozberk on 15.7.2015.
+ */
 public class PlaceBeaconActivity extends ActionBarActivity  {
 
     View markerViewClass;
