@@ -4,68 +4,61 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 
+import com.tmobtech.tmobbeaconproject.R;
+
+import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
+import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by ozberkcetin on 20/07/15.
  */
-public class FindBeacon implements BeaconConsumer {
-    BeaconManager beaconManager;
-    Activity activity;
-    public FindBeacon(Activity activity)
-    {
-        this.activity=activity;
-        beaconManager=BeaconManager.getInstanceForApplication(activity);
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+public class FindBeacon extends Activity implements BeaconConsumer {
+    protected static final String TAG = "RangingActivity";
+    private BeaconManager beaconManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find_beacon);
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        // To detect proprietary beacons, you must add a line like below corresponding to your beacon
+        // type.  Do a web search for "setBeaconLayout" to get the proper expression.
+         beaconManager.getBeaconParsers().add(new BeaconParser().
+                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
         beaconManager.bind(this);
     }
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
     @Override
     public void onBeaconServiceConnect() {
-        beaconManager.setMonitorNotifier(new MonitorNotifier() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
-            public void didEnterRegion(Region region) {
-                Log.i("BeaconFindClass", "I just saw an beacon for the first time!");
-            }
-
-            @Override
-            public void didExitRegion(Region region) {
-                Log.i("BeaconFindClass", "I no longer see an beacon");
-
-            }
-
-            @Override
-            public void didDetermineStateForRegion(int i, Region region) {
-                Log.i("BeaconFindClass", "I have just switched from seeing/not seeing beacons: "+i);
-
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    List list=new ArrayList(beacons);
+                    Log.i(TAG, "List Size="+beacons.size()+"Beacon ID="+list.get(0)+"The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                }
             }
         });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {    }
     }
-
-    @Override
-    public Context getApplicationContext() {
-        return activity;
-    }
-
-    @Override
-    public void unbindService(ServiceConnection serviceConnection) {
-
-
-    }
-
-    @Override
-    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        return false;
-    }
-
-
-
-
 }
