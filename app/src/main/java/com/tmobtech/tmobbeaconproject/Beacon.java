@@ -1,7 +1,7 @@
 package com.tmobtech.tmobbeaconproject;
 
 /**
- * Created by ozberkcetin on 15/07/15.
+ * Created by Ozberk on 15.7.2015.
  */
 public class Beacon {
     private long id;
