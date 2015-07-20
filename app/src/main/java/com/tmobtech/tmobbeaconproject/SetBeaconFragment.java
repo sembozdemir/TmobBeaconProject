@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ozberk on 15.7.2015.
+ * Created by Kerim on 15.7.2015.
  */
 public class SetBeaconFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
 
@@ -34,7 +34,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     static float y;
     ImageView mapImageView;
     MyDbHelper myDbHelper;
-
+    Cursor cursor;
     String imagePath;
     FrameLayout.LayoutParams layoutParams1;
     LayoutInflater inflater;
@@ -69,7 +69,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                         beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
                         beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
                         beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
-
+                       // beacon.mapId = cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAP_ID));
 
                         listBeacon.add(beacon);
                         Log.e("Eklendi","Eklendi");
@@ -142,7 +142,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         if (v.getId() == mapImageView.getId()) {
 
-
+            if (dialog==null)
             dialogCreate();
             dialog.show();
 
@@ -176,15 +176,12 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
     }
 
-
     private void kaydet ()
     {
-        final MarkerView markerView = new MarkerView(getActivity());
+        MarkerView markerView = new MarkerView(getActivity());
         markerView.setImageResource(R.drawable.marker);
         Beacon beacon = new Beacon();
-        beacon.setBeaconName(markerName.getText().toString());
-        markerView.setBeacon(beacon);
-
+        markerView.setTag(markerName.getText());
 
         Log.e("X=", x + "");
 
@@ -205,7 +202,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     markerView.getX(),
                     markerView.getY(),
                     mapId));
-
             markerView.setBeacon(beacon);
         } catch (Exception e) {
             Log.e("SQLError", e.toString());
@@ -218,12 +214,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             @Override
             public void onClick(View v) {
                 markerViewClass = (MarkerView) v;
-                markerName.setText(markerViewClass.getBeacon().getBeaconName());
                 kaydetDialogBtn.setText("Update");
                 kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        markerView.setTag(markerName.getText());
+                        v.setTag(markerName.getText());
                         dialog.cancel();
 
                     }
