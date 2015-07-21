@@ -14,6 +14,9 @@ import com.github.clans.fab.FloatingActionButton;
 import com.parse.ParseObject;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         initViews();
 

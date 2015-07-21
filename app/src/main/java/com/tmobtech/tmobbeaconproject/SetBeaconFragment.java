@@ -109,7 +109,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     .into(mapImageView);
 
 
-
         } catch (Exception e) {
             Log.e("BeaconFragmenError", e.toString());
         }
