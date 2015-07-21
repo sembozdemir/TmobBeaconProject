@@ -140,6 +140,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             dialog.show();
             x = event.getX();
             y = event.getY();
+            
         }
 
         return false;
