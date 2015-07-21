@@ -53,7 +53,7 @@ public class SpinnerAdapter extends BaseAdapter {
         TextView beaconId=(TextView)view.findViewById(R.id.textView3);
         TextView distance=(TextView)view.findViewById(R.id.textView4);
         beaconId.setText(list.get(position).getBluetoothAddress());
-        distance.setText(list.get(position).getDistance()+"");
+        distance.setText(String.valueOf(list.get(position).getDistance()).substring(0,3)+"m");
         return  view;
     }
 }

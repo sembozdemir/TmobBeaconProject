@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class FindBeacon  implements BeaconConsumer {
     protected static final String TAG = "RangingActivity";
-    private BeaconManager beaconManager;
+   static private BeaconManager beaconManager;
     Activity activity;
     public static List<Beacon> ls;
 public  FindBeacon(Activity activity){
@@ -94,6 +94,7 @@ public  FindBeacon(Activity activity){
     @Override
     public void unbindService(ServiceConnection serviceConnection) {
 
+        activity.unbindService(serviceConnection);
     }
 
     @Override
@@ -102,6 +103,16 @@ public  FindBeacon(Activity activity){
         return true;
     }
 
+    public List<Beacon> getBeaconList(){
+
+
+        return  ls;
+    }
+
+    public void   stopBeaconBindService ()
+    {
+        beaconManager.unbind(this);
+    }
 
 
 
