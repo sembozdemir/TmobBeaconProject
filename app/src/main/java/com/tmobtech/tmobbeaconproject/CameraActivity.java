@@ -3,8 +3,7 @@ package com.tmobtech.tmobbeaconproject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.io.File;
@@ -23,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Created by Deniz
+ */
 
 public class CameraActivity extends Activity implements View.OnClickListener {
     private static final String LOG_TAG = CameraActivity.class.getSimpleName();
@@ -32,9 +35,9 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int SELECT_PHOTO = 200;
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Beacon Camera";
+    private static final String IMAGE_DIRECTORY_NAME = "BeaconCamera";
 
-    private Uri fileUri; // file url to store image/video
+    private Uri fileUri; // file url to store image
 
     private ImageView mImgPreview;
     private EditText mEditText;
@@ -147,22 +150,20 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             if (resultCode == RESULT_OK) {
                 try {
                     Uri imageUri = data.getData();
-                    Log.d("ImageUri : ", imageUri.toString());
-                    Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                    long mapId = mDbHelper.insertMap(mEditText.getText().toString(),imageUri.toString());
-                    intent.putExtra("mapId",mapId);
-                    startActivity(intent);
+                    String imagePath = getRealPathFromURI(imageUri);
+                    previewCapturedImage(imagePath);
+                    mBeaconMap.setImagePath(imagePath);
+                    Log.d(LOG_TAG, "ImagePath from Gallery: " + imagePath);
 
-              //      previewCapturedImage(imageUri);
-                //    mBeaconMap.setImagePath(imageUri.toString());
                 } catch (Exception e) {
                     Log.e("Gallery ge select error", e.getMessage());
                 }
             }
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                previewCapturedImage(fileUri);
+                previewCapturedImage(fileUri.toString());
                 mBeaconMap.setImagePath(fileUri.toString());
+                Log.d(LOG_TAG, "ImagePath from Camera: " + fileUri.toString());
 
             } else if (resultCode == RESULT_CANCELED) {
 
@@ -178,28 +179,35 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return "file://" + cursor.getString(idx);
+    }
+
     /**
      * Display image from a path to ImageView
      */
-    private void previewCapturedImage(Uri fileUri) {
-        try {
+    private void previewCapturedImage(String imagePath) {
+//        try {
             mImgPreview.setVisibility(View.VISIBLE);
-
+            Picasso.with(this).load(imagePath).fit().centerInside().into(mImgPreview);
             // bimatp factory
-            BitmapFactory.Options options = new BitmapFactory.Options();
-
-            // downsizing image as it throws OutOfMemory Exception for larger
-            // images
-            options.inSampleSize = 8;
-
-            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
-                    options);
-            Log.d("GetPathResim", fileUri.getPath());
-
-            mImgPreview.setImageBitmap(bitmap);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//
+//            // downsizing image as it throws OutOfMemory Exception for larger
+//            // images
+//            options.inSampleSize = 8;
+//
+//            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
+//                    options);
+//            Log.d("GetPathResim", fileUri.getPath());
+//
+//            mImgPreview.setImageBitmap(bitmap);
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -255,7 +263,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     private void handleEvent() {
         if (mEditText.getText().toString().equals("")) {
-            Toast.makeText(this,"Please give a name for your map", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please give a name for your map", Toast.LENGTH_LONG).show();
         } else {
             mBeaconMap.setName(mEditText.getText().toString());
             addToDatabase();
