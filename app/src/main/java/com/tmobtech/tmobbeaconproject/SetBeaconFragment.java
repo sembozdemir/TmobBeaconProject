@@ -37,6 +37,7 @@ import java.util.List;
  */
 public class SetBeaconFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
 
+    private String TAG="SetBeaconFragmentError";
     View markerViewClass;
     FrameLayout frameLayout;
     static float x;
@@ -83,7 +84,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             mapId = placeBeaconActivity.getMapID();
            listBeacon= Utility.getBeaconList(mapId,getActivity());
         } catch (Exception e) {
-            Log.e("ImagePathError", e.toString());
+            Log.e(TAG, e.toString());
         }
 
         try {
@@ -94,7 +95,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             }
 
         } catch (Exception e) {
-            Log.e("BeaconSetMapError", e.toString());
+            Log.e(TAG, e.toString());
         }
 
         mapImageView.setOnTouchListener(this);
@@ -105,7 +106,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     .into(mapImageView);
 
         } catch (Exception e) {
-            Log.e("BeaconFragmenError", e.toString());
+            Log.e(TAG, e.toString());
         }
 
         return view;
@@ -152,7 +153,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                             myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                             dialog.cancel();
                         } catch (Exception e) {
-                            Log.e("Eror Remove View :", e.toString());
+                            Log.e(TAG, e.toString());
                         }
                     }
 
@@ -205,7 +206,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 }
                 catch (Exception e)
                 {
-                    Log.e("FragmentReplaceError",e.toString());
+                    Log.e(TAG,e.toString());
                 }
 
 
@@ -230,7 +231,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         try {
             mapId = placeBeaconActivity.getMapID();
         } catch (Exception e) {
-            Log.e("MapIdError", "MapIdError");
+            Log.e(TAG, "MapIdError");
         }
 
         try {
@@ -243,7 +244,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             beaconMarkerView.setBeacon(beacon);
         } catch (Exception e) {
-            Log.e("SQLError", e.toString());
+            Log.e(TAG, e.toString());
         }
 
         dialog.cancel();
@@ -326,7 +327,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                                 myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                                 dialog.cancel();
                             } catch (Exception e) {
-                                Log.e("Error Remove View :", e.toString());
+                                Log.e(TAG, e.toString());
                             }
                         }
                     });
@@ -334,7 +335,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             });
 
         } catch (Exception e) {
-            Log.e("YerlestirError", e.toString());
+            Log.e(TAG, e.toString());
         }
     }
 

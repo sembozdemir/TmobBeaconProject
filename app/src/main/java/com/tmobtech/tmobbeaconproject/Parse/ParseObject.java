@@ -6,6 +6,7 @@ import android.app.Activity;
  * Created by ozberkcetin on 20/07/15.
  */
 public class ParseObject {
+    private String TAG="ParseObjectError";
     Activity activity;
     public ParseObject(Activity activity)
     {

@@ -47,36 +47,38 @@ public  FindBeacon(Activity activity){
     @Override
     public void onBeaconServiceConnect() {
 
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-
-                List<Beacon> list=new ArrayList(collection);
-                ls=new ArrayList();
-
-                for (int i=0;i<list.size();i++)
-                {
-                    if (   (list.get(i).getDistance()<2)   )
-                    {
-                        ls.add(list.get(i));
-                        Collections.sort(ls, new Comparator<Beacon>() {
-                            public int compare(Beacon emp1, Beacon emp2) {
-                                return Double.compare(emp1.getDistance(), emp2.getDistance());
-                            }
-                        });
-
-                    }
-                }
-
-
-
-
-            }
-        });
 
         try {
+            beaconManager.setRangeNotifier(new RangeNotifier() {
+                @Override
+                public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
+
+                    List<Beacon> list=new ArrayList(collection);
+                    ls=new ArrayList();
+
+                    for (int i=0;i<list.size();i++)
+                    {
+                        if (   (list.get(i).getDistance()<2)   )
+                        {
+                            ls.add(list.get(i));
+                            Collections.sort(ls, new Comparator<Beacon>() {
+                                public int compare(Beacon emp1, Beacon emp2) {
+                                    return Double.compare(emp1.getDistance(), emp2.getDistance());
+                                }
+                            });
+
+                        }
+                    }
+
+
+
+
+                }
+            });
+
             beaconManager.startRangingBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
-        } catch (RemoteException e) {    }
+        } catch (RemoteException e) {
+        Log.e(TAG,e.toString());}
 
     }
 

@@ -15,17 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by semih on 21.07.2015.
+ * Created by Ozberk on 21.7.2015.
  */
 public class Utility {
 
-    public static int getDisplayWidthPixel(Activity activity) {
-        return activity.getWindowManager().getDefaultDisplay().getWidth();
-    }
-
-    public static int getDisplayHeightPixel(Activity activity) {
-        return activity.getWindowManager().getDefaultDisplay().getHeight();
-    }
+    private static String TAG="UtilityError";
 
     public static List<Beacon> getBeaconList (long mapId,Activity activity)
     {
@@ -51,13 +45,13 @@ public class Utility {
                         list.add(beacon);
 
                     } catch (Exception e) {
-                        Log.e("GetBeaconInDatabaseErr", e.toString());
+                        Log.e(TAG, e.toString());
                     }
 
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.e("ImagePathError", e.toString());
+            Log.e(TAG, e.toString());
         }
 
 
