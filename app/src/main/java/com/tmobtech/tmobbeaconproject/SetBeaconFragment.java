@@ -101,11 +101,16 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         mapImageView.setOnTouchListener(this);
 
+         Log.v("imagePathSon", imagePath.toString());
 
         try {
             Picasso.with(getActivity())
-                    .load(imagePath).fit().centerCrop()
+                    .load(imagePath)
+                    .fit()
+                    .centerCrop()
                     .into(mapImageView);
+
+
 
         } catch (Exception e) {
             Log.e("BeaconFragmenError", e.toString());
