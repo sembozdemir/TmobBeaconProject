@@ -193,21 +193,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 //        try {
             mImgPreview.setVisibility(View.VISIBLE);
             Picasso.with(this).load(imagePath).fit().centerInside().into(mImgPreview);
-            // bimatp factory
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//
-//            // downsizing image as it throws OutOfMemory Exception for larger
-//            // images
-//            options.inSampleSize = 8;
-//
-//            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
-//                    options);
-//            Log.d("GetPathResim", fileUri.getPath());
-//
-//            mImgPreview.setImageBitmap(bitmap);
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
     }
 
 
