@@ -35,7 +35,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     public static final int MEDIA_TYPE_IMAGE = 1;
     private static final int SELECT_PHOTO = 200;
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Beacon Camera";
+    private static final String IMAGE_DIRECTORY_NAME = "BeaconCamera";
 
     private Uri fileUri; // file url to store image
 
@@ -149,19 +149,11 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         if (requestCode == SELECT_PHOTO)
             if (resultCode == RESULT_OK) {
                 try {
-
-
                     Uri imageUri = data.getData();
-
-                    //  Log.d("ImageUri : ", imageUri.toString());
-                    //  Intent intent = new Intent(this, PlaceBeaconActivity.class);
-                    //  long mapId = mDbHelper.insertMap(mEditText.getText().toString(), imageUri.toString());
-                    //  intent.putExtra("mapId", mapId);
-                    //  startActivity(intent);
-
-                    previewCapturedImage(Uri.parse(getRealPathFromURI(imageUri)));
-                    mBeaconMap.setImagePath(imageUri.toString());
-                    Log.v("imageuri", imageUri.toString());
+                    String imagePath = getRealPathFromURI(imageUri);
+                    previewCapturedImage(imagePath);
+                    mBeaconMap.setImagePath(imagePath);
+                    Log.d(LOG_TAG, "ImagePath from Gallery: " + imagePath);
 
                 } catch (Exception e) {
                     Log.e("Gallery ge select error", e.getMessage());
@@ -169,8 +161,9 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             }
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                previewCapturedImage(fileUri);
+                previewCapturedImage(fileUri.toString());
                 mBeaconMap.setImagePath(fileUri.toString());
+                Log.d(LOG_TAG, "ImagePath from Camera: " + fileUri.toString());
 
             } else if (resultCode == RESULT_CANCELED) {
 
@@ -190,16 +183,16 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
+        return "file://" + cursor.getString(idx);
     }
 
     /**
      * Display image from a path to ImageView
      */
-    private void previewCapturedImage(Uri fileUri) {
+    private void previewCapturedImage(String imagePath) {
 //        try {
             mImgPreview.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(fileUri).fit().centerInside().into(mImgPreview);
+            Picasso.with(this).load(imagePath).fit().centerInside().into(mImgPreview);
             // bimatp factory
 //            BitmapFactory.Options options = new BitmapFactory.Options();
 //

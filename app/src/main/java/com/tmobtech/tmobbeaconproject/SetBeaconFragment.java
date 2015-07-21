@@ -101,13 +101,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         mapImageView.setOnTouchListener(this);
 
-         Log.v("imagePathSon", imagePath.toString());
-
         try {
             Picasso.with(getActivity())
                     .load(imagePath)
                     .fit()
-                    .centerCrop()
+                    .centerInside()
                     .into(mapImageView);
 
 
@@ -125,24 +123,17 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
         placeBeaconActivity = new PlaceBeaconActivity();
 
         myDbHelper = new MyDbHelper(getActivity());
 
         listBeacon = new ArrayList<>();
-
-
     }
 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
-
         if (v.getId() == mapImageView.getId()) {
-
-
             dialogCreate();
             dialog.show();
 
@@ -151,8 +142,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             kaydetDialogBtn.setOnClickListener(this);
             silDialogBtn.setOnClickListener(this);
         }
-
-
         return false;
     }
 

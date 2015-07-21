@@ -11,7 +11,7 @@ import android.util.Log;
  * Created by semih on 14.07.2015.
  */
 public class MyDbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 7;
 
     public static final String DATABASE_NAME = "beaconmap.db";
     public static final String TABLE_MAPS_NAME = "maps";
@@ -58,7 +58,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_TABLE_BEACONS = "CREATE TABLE " + TABLE_BEACONS_NAME + "(" +
                 COLUMN_BEACON_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_BEACON_NAME + " TEXT, " +
-                COLUMN_BEACON_MAC_ADDRESS + " TEXT, " +
+                COLUMN_BEACON_MAC_ADDRESS + " TEXT UNIQUE, " +
                 COLUMN_BEACON_APSIS + " REAL, " +
                 COLUMN_BEACON_ORDINAT + " REAL, " +
                 COLUMN_BEACON_MAP_ID + " INTEGER, " +
@@ -120,7 +120,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_MAPS_NAME, null, values);
     }
 
-    public long deleteMap(long mapId) {
+    public int deleteMap(long mapId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_MAP_ID + " = ?";
         String[] whereArgs = new String[] {

@@ -1,9 +1,6 @@
 package com.tmobtech.tmobbeaconproject.BeaconManager;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -14,13 +11,10 @@ import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by ozberkcetin on 20/07/15.
@@ -51,8 +45,13 @@ public class FindBeacon extends Activity implements BeaconConsumer {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 if (beacons.size() > 0) {
-                    List list=new ArrayList(beacons);
-                    Log.i(TAG, "List Size="+beacons.size()+"Beacon ID="+list.get(0)+"The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                    Beacon beacon = beacons.iterator().next();
+                    if (beacon.getDistance() < 1) {
+                        Log.i(TAG, "Size: " + beacons.size() +
+                                " Name: " + beacon.getBluetoothName() +
+                                " Address: " + beacon.getBluetoothAddress() +
+                                " Distance: " + beacon.getDistance());
+                    }
                 }
             }
         });

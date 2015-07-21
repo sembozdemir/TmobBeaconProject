@@ -28,6 +28,11 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".CameraActivity"
@@ -46,11 +51,6 @@
         <activity
             android:name=".BeaconManager.FindBeacon"
             android:label="@string/title_activity_find_beacon" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
