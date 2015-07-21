@@ -12,7 +12,6 @@ import android.widget.GridView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.parse.ParseObject;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import org.altbeacon.beacon.BeaconManager;
@@ -73,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BeaconMap beaconMap = (BeaconMap) parent.getItemAtPosition(position);
                 onMapSelected(beaconMap);
+
             }
         });
     }
