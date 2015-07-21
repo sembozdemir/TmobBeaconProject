@@ -2,10 +2,13 @@ package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,15 +58,25 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     List<Beacon> listBeacon;
     FindBeacon findBeacon;
     TextView selectedBeacon;
+    Button intentPlaceBeacon;
+    SetPlaceFragment setPlaceFragment;
+    FragmentTransaction fragmentTransaction;
+    private static final int CONTENT_VIEW_ID = 10101010;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
+        intentPlaceBeacon=(Button)view.findViewById(R.id.button4);
+
+
+        intentPlaceBeacon.setOnClickListener(this);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame2);
-        initialize();
         mapImageView = (ImageView) view.findViewById(R.id.imageView);
+
+        initialize(view);
+
 
         try {
             imagePath = placeBeaconActivity.getImagePath();
@@ -98,7 +111,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         return view;
     }
 
-    private void initialize() {
+    private void initialize(View v) {
         layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -110,6 +123,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         listBeacon = new ArrayList<>();
 
         findBeacon = new FindBeacon(getActivity());
+
+
     }
 
     @Override
@@ -129,42 +144,72 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             @Override
         public void onClick(View v) {
-            if (v.getId() == silDialogBtn.getId()) {
                 try {
-                    ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
-                    parentView.removeView(markerViewClass);
-                    myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
-                    dialog.cancel();
-                } catch (Exception e) {
-                    Log.e("Eror Remove View :", e.toString());
+                    if (v.getId() == silDialogBtn.getId()) {
+                        try {
+                            ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
+                            parentView.removeView(markerViewClass);
+                            myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
+                            dialog.cancel();
+                        } catch (Exception e) {
+                            Log.e("Eror Remove View :", e.toString());
+                        }
+                    }
+
+
+                    if (v.getId() == refreshBtn.getId()) {
+
+                        list = findBeacon.ls;
+                        com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
+                        spinner.setAdapter(spinnerAdapter);
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                selectedBeacon.setText(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                    }
+
+
+
+                    if (v.getId() == kaydetDialogBtn.getId()) {
+
+                        kaydet();
+                    }
+
+
                 }
+                catch (Exception e)
+                {}
+
+
+
+                try {
+                    if (v.getId()==intentPlaceBeacon.getId())
+                    {
+                        setPlaceFragment=new SetPlaceFragment();
+                        fragmentTransaction=getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(CONTENT_VIEW_ID,setPlaceFragment);
+
+
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.e("FragmentReplaceError",e.toString());
+                }
+
+
             }
-
-        if (v.getId() == refreshBtn.getId()) {
-
-            list = findBeacon.ls;
-            com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
-            spinner.setAdapter(spinnerAdapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectedBeacon.setText(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-        }
-
-        if (v.getId() == kaydetDialogBtn.getId()) {
-
-            kaydet();
-        }
-
-    }
 
     private void kaydet() {
         final BeaconMarkerView beaconMarkerView = new BeaconMarkerView(getActivity());

@@ -18,7 +18,7 @@ import java.util.List;
  * Created by semih on 21.07.2015.
  */
 public class Utility {
-    static  List<Beacon> list;
+
     public static int getDisplayWidthPixel(Activity activity) {
         return activity.getWindowManager().getDefaultDisplay().getWidth();
     }
@@ -29,6 +29,7 @@ public class Utility {
 
     public static List<Beacon> getBeaconList (long mapId,Activity activity)
     {
+        List<Beacon> list;
         list=new ArrayList<>();
 
         MyDbHelper myDbHelper = new MyDbHelper(activity);
