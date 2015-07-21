@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
 
 
@@ -67,27 +68,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         try {
             imagePath = placeBeaconActivity.getImagePath();
             mapId = placeBeaconActivity.getMapID();
-            Cursor cursor = myDbHelper.getBeaconsAtMap(mapId);
-            if (cursor.moveToFirst()) {
-                do {
-                    try {
-
-                        Beacon beacon = new Beacon();
-                        beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_NAME)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-                        beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
-                        beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
-                        beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-
-                        listBeacon.add(beacon);
-
-                    } catch (Exception e) {
-                        Log.e("GetBeaconInDatabaseErr", e.toString());
-                    }
-
-                } while (cursor.moveToNext());
-            }
+           listBeacon= Utility.getBeaconList(mapId,getActivity());
         } catch (Exception e) {
             Log.e("ImagePathError", e.toString());
         }
