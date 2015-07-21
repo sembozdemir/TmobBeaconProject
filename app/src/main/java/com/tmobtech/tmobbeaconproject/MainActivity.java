@@ -12,7 +12,6 @@ import android.widget.GridView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.parse.ParseObject;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import org.altbeacon.beacon.BeaconManager;
@@ -37,12 +36,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
-
-
 
 
 
