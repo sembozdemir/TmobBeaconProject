@@ -26,7 +26,7 @@ public class PageAdapter extends FragmentPagerAdapter {
         switch (i)
         {
             case 0: return  new SetBeaconFragment();
-            case 1:return  new SetPlaceFragment();
+
         }
         return  null;
     }

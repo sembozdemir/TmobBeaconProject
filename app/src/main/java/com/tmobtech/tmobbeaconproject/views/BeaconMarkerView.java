@@ -5,23 +5,30 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.tmobtech.tmobbeaconproject.Beacon;
+import com.tmobtech.tmobbeaconproject.R;
 
 /**
  * Created by semih on 15.07.2015.
  */
-public class MarkerView extends ImageView {
+public class BeaconMarkerView extends ImageView {
     private Beacon beacon;
 
-    public MarkerView(Context context) {
+
+
+
+    public BeaconMarkerView(Context context) {
         super(context);
+        setImageResource(R.drawable.beaconmarker);
     }
 
-    public MarkerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BeaconMarkerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setImageResource(R.drawable.beaconmarker);
     }
 
-    public MarkerView(Context context, AttributeSet attrs) {
+    public BeaconMarkerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setImageResource(R.drawable.beaconmarker);
     }
 
     public Beacon getBeacon() {
