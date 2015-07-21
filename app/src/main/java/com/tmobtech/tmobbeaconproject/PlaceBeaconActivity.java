@@ -1,41 +1,20 @@
 package com.tmobtech.tmobbeaconproject;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.media.Image;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewManager;
-import android.view.ViewParent;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
-
-import javax.security.auth.login.LoginException;
 
 /**
  * Created by Ozberk on 15.7.2015.
@@ -97,7 +76,7 @@ public class PlaceBeaconActivity extends ActionBarActivity  {
                 while (cursor.moveToNext());
 
             Picasso.with(this)
-                    .load(imagePath).fit().centerCrop()
+                    .load(imagePath).fit().centerInside()
                     .into(mapImageView);
 
 
