@@ -1,21 +1,21 @@
 package com.tmobtech.tmobbeaconproject;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.parse.ParseObject;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
-
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +32,14 @@ public class MainActivity extends ActionBarActivity {
     private MyDbHelper mDbHelper;
     private List<ParseObject> todos;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-
-
         initViews();
-
         // Get Database Helper
         mDbHelper = new MyDbHelper(this);
 
@@ -68,7 +66,57 @@ public class MainActivity extends ActionBarActivity {
                 onMapSelected(beaconMap);
             }
         });
+
+        mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           final int arg2, long arg3) {
+
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+
+                alertDialog.setTitle("Confirm Delete...");
+
+                // Setting Dialog Message
+                alertDialog.setMessage("Are you sure you want delete this?");
+
+                // Setting Icon to Dialog
+                alertDialog.setIcon(R.drawable.delete);
+
+                // Setting Positive "Yes" Button
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        deleteMap(arg2);
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+
+                        Toast.makeText(getApplicationContext(), "You clicked on YES", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Setting Negative "NO" Button
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+                        Toast.makeText(getApplicationContext(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+
+                // Showing Alert Message
+                alertDialog.show();
+
+
+                return false;
+            }
+        });
+
+
     }
+
 
     @Override
     protected void onResume() {
@@ -79,6 +127,12 @@ public class MainActivity extends ActionBarActivity {
         MyGridAdapter myGridAdapter = new MyGridAdapter(this, beaconMaps);
 
         mGridView.setAdapter(myGridAdapter);
+    }
+
+    public void deleteMap(int position) {
+
+        BeaconMap beaconMap = (BeaconMap) mGridView.getItemAtPosition(position);
+        mDbHelper.deleteMap(beaconMap.getId());
     }
 
     @Override
@@ -108,7 +162,9 @@ public class MainActivity extends ActionBarActivity {
         Intent placeBeaconIntent = new Intent(MainActivity.this, PlaceBeaconActivity.class);
         placeBeaconIntent.putExtra("mapId", beaconMap.getId());
         startActivity(placeBeaconIntent);
+
     }
+
 
     private void addFromCamera() {
         Intent cameraIntent = new Intent(MainActivity.this, CameraActivity.class);
@@ -121,6 +177,7 @@ public class MainActivity extends ActionBarActivity {
         galleryIntent.putExtra(Intent.EXTRA_TEXT, ACTION_GALLERY);
         startActivity(galleryIntent);
     }
+
 
     private void initViews() {
         mGridView = (GridView) findViewById(R.id.gridview);
