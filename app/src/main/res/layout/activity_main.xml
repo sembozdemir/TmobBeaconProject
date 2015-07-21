@@ -35,7 +35,7 @@
         fab:menu_labels_showAnimation="@anim/jump_from_down"
         fab:menu_shadowColor="#444">
 
-        <com.github.clans.fab.FloatingActionButton
+             <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

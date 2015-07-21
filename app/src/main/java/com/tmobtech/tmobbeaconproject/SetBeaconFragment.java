@@ -22,7 +22,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
-import com.tmobtech.tmobbeaconproject.views.MarkerView;
+import com.tmobtech.tmobbeaconproject.utility.Utility;
+import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
 
 
 import java.util.ArrayList;
@@ -67,27 +68,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         try {
             imagePath = placeBeaconActivity.getImagePath();
             mapId = placeBeaconActivity.getMapID();
-            Cursor cursor = myDbHelper.getBeaconsAtMap(mapId);
-            if (cursor.moveToFirst()) {
-                do {
-                    try {
-
-                        Beacon beacon = new Beacon();
-                        beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_NAME)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-                        beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
-                        beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
-                        beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-
-                        listBeacon.add(beacon);
-
-                    } catch (Exception e) {
-                        Log.e("GetBeaconInDatabaseErr", e.toString());
-                    }
-
-                } while (cursor.moveToNext());
-            }
+           listBeacon= Utility.getBeaconList(mapId,getActivity());
         } catch (Exception e) {
             Log.e("ImagePathError", e.toString());
         }
@@ -107,7 +88,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         try {
             Picasso.with(getActivity())
-                    .load(imagePath).fit().centerCrop()
+                    .load(imagePath).fit().centerInside()
                     .into(mapImageView);
 
         } catch (Exception e) {
@@ -146,18 +127,18 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         return false;
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == silDialogBtn.getId()) {
-            try {
-                ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
-                parentView.removeView(markerViewClass);
-                myDbHelper.deleteBeacon(((MarkerView) markerViewClass).getBeacon().getId());
-                dialog.cancel();
-            } catch (Exception e) {
-                Log.e("Eror Remove View :", e.toString());
+            @Override
+        public void onClick(View v) {
+            if (v.getId() == silDialogBtn.getId()) {
+                try {
+                    ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
+                    parentView.removeView(markerViewClass);
+                    myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
+                    dialog.cancel();
+                } catch (Exception e) {
+                    Log.e("Eror Remove View :", e.toString());
+                }
             }
-        }
 
         if (v.getId() == refreshBtn.getId()) {
 
@@ -186,11 +167,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     }
 
     private void kaydet() {
-        final MarkerView markerView = new MarkerView(getActivity());
-        markerView.setImageResource(R.drawable.marker);
+        final BeaconMarkerView beaconMarkerView = new BeaconMarkerView(getActivity());
+
         Beacon beacon = new Beacon();
         beacon.setBeaconName(markerName.getText().toString());
-        markerView.setBeacon(beacon);
+        beaconMarkerView.setBeacon(beacon);
 
         try {
             beacon.setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
@@ -198,9 +179,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         }
 
-        markerView.setX(x - 64);
-        markerView.setY(y - 64);
-        frameLayout.addView(markerView, layoutParams1);
+        beaconMarkerView.setX(x - 64);
+        beaconMarkerView.setY(y - 64);
+        frameLayout.addView(beaconMarkerView, layoutParams1);
         try {
             mapId = placeBeaconActivity.getMapID();
         } catch (Exception e) {
@@ -211,34 +192,39 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             beacon.setId(myDbHelper.insertBeacon(markerName.getText().toString(),
                     beacon.getMacAddress(),
-                    markerView.getX(),
-                    markerView.getY(),
+                    beaconMarkerView.getX(),
+                    beaconMarkerView.getY(),
                     mapId));
 
-            markerView.setBeacon(beacon);
+            beaconMarkerView.setBeacon(beacon);
         } catch (Exception e) {
             Log.e("SQLError", e.toString());
         }
 
         dialog.cancel();
 
-        markerView.setOnClickListener(new View.OnClickListener() {
+        beaconMarkerView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                markerViewClass = (MarkerView) v;
-                markerName.setText(((MarkerView) markerViewClass).getBeacon().getBeaconName());
-                selectedBeacon.setText(((MarkerView) markerViewClass).getBeacon().getMacAddress());
+                markerViewClass = (BeaconMarkerView) v;
+                markerName.setText(((BeaconMarkerView) markerViewClass).getBeacon().getBeaconName());
+                selectedBeacon.setText(((BeaconMarkerView) markerViewClass).getBeacon().getMacAddress());
                 kaydetDialogBtn.setText("Update");
                 kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        markerView.getBeacon().setBeaconName(markerName.getText().toString());
-                        markerView.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                        myDbHelper.updateBeaconName(markerView.getBeacon().getId(), markerView.getBeacon().getBeaconName());
-                        myDbHelper.updateBeaconMacAddress(markerView.getBeacon().getId(), markerView.getBeacon().getMacAddress());
-                        dialog.cancel();
+                        beaconMarkerView.getBeacon().setBeaconName(markerName.getText().toString());
+                        beaconMarkerView.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+                        myDbHelper.updateBeaconName(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getBeaconName());
+                        try {
+                            myDbHelper.updateBeaconMacAddress(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getMacAddress());
+
+                        }
+                        catch (Exception e)
+                        {}
+                         dialog.cancel();
 
                     }
                 });
@@ -253,15 +239,15 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     private void yerlestir(final Beacon beacon) {
         try {
 
-            final MarkerView markerView = new MarkerView(getActivity());
-            markerView.setImageResource(R.drawable.marker);
-            markerView.setX(beacon.getApsis());
-            markerView.setY(beacon.getOrdinat());
-            markerView.setBeacon(beacon);
+            final BeaconMarkerView beaconMarkerView = new BeaconMarkerView(getActivity());
 
-            frameLayout.addView(markerView, layoutParams1);
+            beaconMarkerView.setX(beacon.getApsis());
+            beaconMarkerView.setY(beacon.getOrdinat());
+            beaconMarkerView.setBeacon(beacon);
 
-            markerView.setOnClickListener(new View.OnClickListener() {
+            frameLayout.addView(beaconMarkerView, layoutParams1);
+
+            beaconMarkerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -281,7 +267,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                         @Override
                         public void onClick(View v) {
 
-                            update(markerView);
+                            update(beaconMarkerView);
 
                         }
                     });
@@ -292,7 +278,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                             try {
                                 ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
                                 parentView.removeView(markerViewClass);
-                                myDbHelper.deleteBeacon(((MarkerView) markerViewClass).getBeacon().getId());
+                                myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                                 dialog.cancel();
                             } catch (Exception e) {
                                 Log.e("Error Remove View :", e.toString());
@@ -308,7 +294,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     }
 
 
-    private void update(MarkerView v) {
+    private void update(BeaconMarkerView v) {
         try {
             v.getBeacon().setBeaconName(markerName.getText().toString());
         } catch (Exception e) {

@@ -46,9 +46,6 @@
             android:name=".PlaceBeaconActivity"
             android:label="@string/title_activity_place_beacon" />
         <activity
-            android:name=".MeasureBeaconPowerActivity"
-            android:label="@string/title_activity_measure_beacon_power" />
-        <activity
             android:name=".BeaconManager.FindBeacon"
             android:label="@string/title_activity_find_beacon" >
         </activity>
