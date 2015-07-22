@@ -64,7 +64,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 COLUMN_BEACON_MAP_ID + " INTEGER, " +
                 // foreign key beacons_map_id references map_id
                 "FOREIGN KEY(" + COLUMN_BEACON_MAP_ID + ") " + "REFERENCES " +
-                    TABLE_MAPS_NAME + "(" + COLUMN_MAP_ID + ")" + " ON DELETE CASCADE" +
+                TABLE_MAPS_NAME + "(" + COLUMN_MAP_ID + ")" + " ON DELETE CASCADE" +
                 ");";
 
         db.execSQL(SQL_CREATE_TABLE_BEACONS);
@@ -78,7 +78,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 COLUMN_PLACE_MAP_ID + " INTEGER, " +
                 // foreign key beacons_map_id references map_id
                 "FOREIGN KEY(" + COLUMN_PLACE_MAP_ID + ") " + "REFERENCES " +
-                    TABLE_MAPS_NAME + "(" + COLUMN_MAP_ID + ")" + " ON DELETE CASCADE" +
+                TABLE_MAPS_NAME + "(" + COLUMN_MAP_ID + ")" + " ON DELETE CASCADE" +
                 ");";
 
         db.execSQL(SQL_CREATE_TABLE_PLACES);
@@ -92,7 +92,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 "PRIMARY KEY(" + COLUMN_BEACON_MEASURE_BEACON_ID + ", " + COLUMN_BEACON_MEASURE_PLACE_ID + "), " +
                 // foreign key beacons_id references map_id
                 "FOREIGN KEY(" + COLUMN_BEACON_MEASURE_BEACON_ID + ") " + "REFERENCES " +
-                    TABLE_BEACONS_NAME + "(" + COLUMN_BEACON_ID + ") " + " ON DELETE CASCADE, " +
+                TABLE_BEACONS_NAME + "(" + COLUMN_BEACON_ID + ") " + " ON DELETE CASCADE, " +
                 "FOREIGN KEY(" + COLUMN_BEACON_MEASURE_PLACE_ID + ") " + "REFERENCES " +
                 TABLE_PLACES_NAME + "(" + COLUMN_PLACE_ID + ")" + " ON DELETE CASCADE" +
                 ");";
@@ -111,7 +111,6 @@ public class MyDbHelper extends SQLiteOpenHelper {
     }
 
 
-
     public long insertMap(String name, String imgPath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -123,7 +122,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int deleteMap(long mapId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_MAP_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + mapId
         };
         return db.delete(TABLE_MAPS_NAME, whereClause, whereArgs);
@@ -143,7 +142,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int deleteBeacon(long beaconId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + beaconId
         };
         return db.delete(TABLE_BEACONS_NAME, whereClause, whereArgs);
@@ -162,7 +161,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int deletePlace(long placeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_PLACE_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + placeId
         };
         return db.delete(TABLE_PLACES_NAME, whereClause, whereArgs);
@@ -177,19 +176,19 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_BEACON_MEASURE_NAME, null, values);
     }
 
-    public Cursor getMaps () {
+    public Cursor getMaps() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_MAPS_NAME, null, null, null, null, null, null, null);
     }
 
     public Cursor getMapFromId(long mapId) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] columns = new String[] {
+        String[] columns = new String[]{
                 COLUMN_MAP_NAME,
                 COLUMN_MAP_IMAGE_PATH
         };
         String selection = COLUMN_MAP_ID + " = ?";
-        String[] selectionArgs = new String[] {
+        String[] selectionArgs = new String[]{
                 "" + mapId
         };
         return db.query(TABLE_MAPS_NAME,
@@ -202,8 +201,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public Cursor getBeaconsAtMap(long mapId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_BEACON_MAP_ID + "=?";
-        String[] selectionArgs = new String[] {"" + mapId};
-        String[] columns = new String[] {
+        String[] selectionArgs = new String[]{"" + mapId};
+        String[] columns = new String[]{
                 COLUMN_BEACON_ID,
                 COLUMN_BEACON_NAME,
                 COLUMN_BEACON_MAC_ADDRESS,
@@ -219,8 +218,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public Cursor getPlacesAtMap(long mapId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_PLACE_MAP_ID + "=?";
-        String[] selectionArgs = new String[] {"" + mapId};
-        String[] columns = new String[] {
+        String[] selectionArgs = new String[]{"" + mapId};
+        String[] columns = new String[]{
                 COLUMN_PLACE_ID,
                 COLUMN_PLACE_NAME,
                 COLUMN_PLACE_APSIS,
@@ -235,8 +234,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public Cursor getMeasurePowersForPlace(long placeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
-        String[] selectionArgs = new String[] {"" + placeId};
-        String[] columns = new String[] {
+        String[] selectionArgs = new String[]{"" + placeId};
+        String[] columns = new String[]{
                 COLUMN_BEACON_MEASURE_BEACON_ID,
                 COLUMN_BEACON_MEASURE_POWER
         };
@@ -249,7 +248,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int updateBeaconName(long beaconId, String newBeaconName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + beaconId
         };
         ContentValues values = new ContentValues();
@@ -257,10 +256,10 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
     }
 
-    public int updateBeaconMacAddress(long beaconId, String newBeaconMacAddress){
+    public int updateBeaconMacAddress(long beaconId, String newBeaconMacAddress) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + beaconId
         };
         ContentValues values = new ContentValues();
@@ -271,7 +270,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int updateBeaconCoordinate(long beaconId, float newApsis, float newOrdinat) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + beaconId
         };
         ContentValues values = new ContentValues();
@@ -283,7 +282,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int updatePlaceName(long placeId, String newPlaceName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + placeId
         };
         ContentValues values = new ContentValues();
@@ -294,12 +293,23 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public int updatePlaceCoordinate(long placeId, float newApsis, float newOrdinat) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";
-        String[] whereArgs = new String[] {
+        String[] whereArgs = new String[]{
                 "" + placeId
         };
         ContentValues values = new ContentValues();
         values.put(COLUMN_PLACE_APSIS, newApsis);
         values.put(COLUMN_PLACE_ORDINAT, newOrdinat);
         return db.update(TABLE_PLACES_NAME, values, whereClause, whereArgs);
+    }
+
+    public int updateBeaconMeasured(long beaconId, long placeId, float power) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_BEACON_MEASURE_BEACON_ID + "=?" + COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
+        String[] whereArgs = new String[]{
+                "" + beaconId + "" + placeId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BEACON_MEASURE_POWER, power);
+        return db.update(TABLE_BEACON_MEASURE_NAME, values, whereClause, whereArgs);
     }
 }
