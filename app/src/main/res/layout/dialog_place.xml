@@ -3,11 +3,30 @@
     android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText_place_name"
-        android:hint="Place Name" />
+        android:gravity="center"
+        android:padding="8dp">
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText_place_name"
+            android:hint="Place Name"
+            android:layout_weight="1"
+            android:padding="8dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton_refresh"
+            android:background="@color/button_normal"
+            android:src="@drawable/ic_refresh"
+            android:layout_margin="4dp"
+            android:padding="8dp" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
@@ -17,28 +36,38 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save"
+            android:textColor="@color/button_labels"
+            android:background="@color/button_normal"
             android:id="@+id/button_save_place"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="4dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update"
+            android:textColor="@color/button_labels"
+            android:background="@color/button_normal"
             android:id="@+id/button_update_place"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="4dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"
+            android:textColor="@color/button_labels"
+            android:background="@color/button_normal"
             android:id="@+id/button_delete_place"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:layout_margin="4dp" />
 
     </LinearLayout>
 </LinearLayout>

@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
@@ -38,6 +40,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private float x;
     private float y;
     private Dialog dialog;
+    private FindBeacon findBeacon;
 
 
     @Nullable
@@ -53,8 +56,15 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         setImageView(parentActivity.getImagePath());
         beaconList = Utility.getBeaconList(parentActivity.getMapID(), getActivity()) ;
         placeBeacons(beaconList);
+        findBeacon = new FindBeacon(getActivity());
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        findBeacon.stopBeaconBindService();
     }
 
     private void placeBeacons(List<Beacon> beaconList) {
@@ -105,18 +115,18 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private void dialogCreate(String placeName) {
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.dialog_place);
+        ImageButton refreshButton = (ImageButton) dialog.findViewById(R.id.imageButton_refresh);
         Button saveDialogButton = (Button) dialog.findViewById(R.id.button_save_place);
         Button delDialogButton = (Button) dialog.findViewById(R.id.button_delete_place);
         Button updateDialogButton = (Button) dialog.findViewById(R.id.button_update_place);
         EditText placeNameEditText = (EditText) dialog.findViewById(R.id.editText_place_name);
         ListView beaconPowerListView = (ListView) dialog.findViewById(R.id.listView_beacon);
-        BeaconPowerListAdapter beaconPowerListAdapter;
+        final BeaconPowerListAdapter beaconPowerListAdapter;
         if (!placeName.equals("")) { // it will be edit place dialog
             dialog.setTitle("Edit Place");
             saveDialogButton.setVisibility(View.GONE);
-            beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),
-                    Utility.getBeaconPowers(parentActivity.getMapID())); // <TODO: yanlış olabilir
-            beaconPowerListView.setAdapter(beaconPowerListAdapter);
+            //beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),                    Utility.getPlaceList(getActivity(), parentActivity.getMapID())); // <TODO: yanlış olabilir
+            //beaconPowerListView.setAdapter(beaconPowerListAdapter);
             placeNameEditText.setText(placeName);
             updateDialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -137,6 +147,16 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
             dialog.setTitle("New Place"); // it will be new place dialog
             updateDialogButton.setVisibility(View.GONE);
             delDialogButton.setVisibility(View.GONE);
+            beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),
+                    Utility.getBeaconPowers(findBeacon, parentActivity.getMapID() ,getActivity()));
+            beaconPowerListView.setAdapter(beaconPowerListAdapter);
+
+            refreshButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    beaconPowerListAdapter.notifyAll();
+                }
+            });
 
             saveDialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override

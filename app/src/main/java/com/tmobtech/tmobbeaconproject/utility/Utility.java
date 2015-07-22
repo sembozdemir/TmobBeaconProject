@@ -1,12 +1,14 @@
 package com.tmobtech.tmobbeaconproject.utility;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
 import com.tmobtech.tmobbeaconproject.Beacon;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.BeaconPower;
+import com.tmobtech.tmobbeaconproject.Place;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
@@ -58,28 +60,62 @@ public class Utility {
     }
 
     public static List<BeaconPower> getBeaconPowers(FindBeacon findBeacon,long mapID,Activity activity) {
-
-
-        List<Beacon> list=getBeaconList(mapID,activity);
-
-        List<org.altbeacon.beacon.Beacon> ls= findBeacon.ls;
-        List<BeaconPower> beaconPowerList=new ArrayList<>();
-        for (int i=0;i<list.size();i++)
-        {
-            for (int j=0;j<ls.size();j++)
-            {
-                if (list.get(i).getMacAddress().equals(ls.get(j).getBluetoothAddress()))
-                {
-                    BeaconPower beaconPower=new BeaconPower(list.get(i),ls.get(j).getDistance(),false);
+        List<Beacon> list = getBeaconList(mapID, activity);
+        List<org.altbeacon.beacon.Beacon> ls = findBeacon.ls;
+        List<BeaconPower> beaconPowerList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < ls.size(); j++) {
+                if (list.get(i).getMacAddress().equals(ls.get(j).getBluetoothAddress())) {
+                    BeaconPower beaconPower = new BeaconPower(list.get(i), ls.get(j).getDistance(), false);
                     beaconPowerList.add(beaconPower);
                 }
             }
-
-
         }
-
-
-
         return beaconPowerList;
+    }
+
+    public static List<Place> getPlaceList(Context context, long mapID) {
+        List<Place> placeList = new ArrayList<>();
+        MyDbHelper myDbHelper = new MyDbHelper(context);
+        Cursor cursor = myDbHelper.getPlacesAtMap(mapID);
+        if (cursor.moveToFirst()) {
+            do {
+                long placeId = cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_ID));
+                String placeName = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_NAME));
+                float apsis = cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_APSIS));
+                float ordinat = cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_ORDINAT));
+                Place place = new Place(placeId, placeName, apsis, ordinat, getBeaconPowersFromDb(context, placeId));
+                placeList.add(place);
+            } while (cursor.moveToNext());
+        }
+        return placeList;
+    }
+
+    private static List<BeaconPower> getBeaconPowersFromDb(Context context, long placeId) {
+        List<BeaconPower> beaconPowerList = new ArrayList<>();
+        MyDbHelper myDbHelper = new MyDbHelper(context);
+        Cursor cursor = myDbHelper.getMeasurePowersForPlace(placeId);
+        if (cursor.moveToFirst()) {
+            do {
+                long beaconId = cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MEASURE_BEACON_ID));
+                double power = cursor.getDouble(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MEASURE_POWER));
+                BeaconPower beaconPower = new BeaconPower(getBeaconFromDb(context, beaconId), power, true);
+                beaconPowerList.add(beaconPower);
+            } while (cursor.moveToNext());
+        }
+        return beaconPowerList;
+    }
+
+    private static Beacon getBeaconFromDb(Context context, long beaconId) {
+        Beacon beacon = new Beacon(beaconId);
+        MyDbHelper myDbHelper = new MyDbHelper(context);
+        Cursor cursor = myDbHelper.getBeaconFromId(beaconId);
+        if (cursor.moveToFirst()) {
+            beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_NAME)));
+            beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
+            beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
+            beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
+        }
+        return beacon;
     }
 }

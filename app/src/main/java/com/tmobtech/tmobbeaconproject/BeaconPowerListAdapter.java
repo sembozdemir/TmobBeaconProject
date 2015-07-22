@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * Created by semih on 21.07.2015.
  */
@@ -20,7 +22,7 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
         CheckBox checkBoxIsAdded;
     }
 
-    public BeaconPowerListAdapter(Context context, BeaconPower[] objects) {
+    public BeaconPowerListAdapter(Context context, List<BeaconPower> objects) {
         super(context, R.layout.list_item_dialog_place, objects);
     }
 
