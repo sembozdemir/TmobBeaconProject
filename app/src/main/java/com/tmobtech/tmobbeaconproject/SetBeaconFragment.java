@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     Button silDialogBtn;
     Dialog dialog;
     Button kaydetDialogBtn;
-    Button refreshBtn;
+    ImageButton refreshBtn;
     Spinner spinner;
     EditText markerName;
     List<Beacon> listBeacon;
@@ -372,7 +373,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         kaydetDialogBtn = (Button) dialog.findViewById(R.id.button);
         silDialogBtn = (Button) dialog.findViewById(R.id.button2);
         markerName = (EditText) dialog.findViewById(R.id.editText);
-        refreshBtn = (Button) dialog.findViewById(R.id.button3);
+        refreshBtn = (ImageButton) dialog.findViewById(R.id.button3);
         spinner = (Spinner) dialog.findViewById(R.id.spinner);
 
         kaydetDialogBtn.setOnClickListener(this);
