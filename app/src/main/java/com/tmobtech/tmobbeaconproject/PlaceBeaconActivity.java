@@ -21,8 +21,7 @@ public class PlaceBeaconActivity extends ActionBarActivity {
     MyDbHelper myDbHelper;
     Cursor cursor;
     static String imagePath;
-    PagerAdapter pagerAdapter;
-    ViewPager viewPager;
+    private String TAG="PlaceBeaconActivityError";
     private static final int CONTENT_VIEW_ID = 10101010;
 
 
@@ -39,18 +38,14 @@ public class PlaceBeaconActivity extends ActionBarActivity {
             FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
             ft.add(CONTENT_VIEW_ID, newFragment).commit();
         }
-        initialize();
-
-        cursor = myDbHelper.getMapFromId(mapID);
         try {
-            if (cursor.moveToFirst())
-                do {
-                    imagePath = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
-                }
-                while (cursor.moveToNext());
-        } catch (Exception e) {
-            Log.e("DATABASE ERROR", e.toString());
+            initialize();
+            getImageMap();
+
         }
+        catch (Exception e){Log.e(TAG,e.toString());}
+
+
 
 
 
@@ -60,6 +55,20 @@ public class PlaceBeaconActivity extends ActionBarActivity {
     private void initialize() {
         myDbHelper = new MyDbHelper(PlaceBeaconActivity.this);
         mapID = getIntent().getLongExtra("mapId", 0);
+    }
+
+    private void getImageMap()
+    {
+        cursor = myDbHelper.getMapFromId(mapID);
+        try {
+            if (cursor.moveToFirst())
+                do {
+                    imagePath = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
+                }
+                while (cursor.moveToNext());
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     public String getImagePath() {
