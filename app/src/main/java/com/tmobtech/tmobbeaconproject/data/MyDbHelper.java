@@ -181,6 +181,23 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.query(TABLE_MAPS_NAME, null, null, null, null, null, null, null);
     }
 
+    public Cursor getBeaconFromId(long beaconId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = new String[]{
+                COLUMN_BEACON_NAME,
+                COLUMN_BEACON_MAC_ADDRESS,
+                COLUMN_BEACON_APSIS,
+                COLUMN_BEACON_ORDINAT,
+                COLUMN_BEACON_MAP_ID
+        };
+        String selection = COLUMN_BEACON_ID + "= ?";
+        String[] selectionArgs = new String[]{
+                "" + beaconId
+        };
+
+        return db.query(TABLE_BEACONS_NAME, columns, selection, selectionArgs, null, null, null);
+    }
+
     public Cursor getMapFromId(long mapId) {
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = new String[]{
