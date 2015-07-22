@@ -11,6 +11,8 @@
         android:padding="8dp">
 
         <EditText
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText_place_name"
@@ -22,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton_refresh"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:src="@drawable/ic_refresh"
             android:layout_margin="4dp"
             android:padding="8dp" />
@@ -44,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:textColor="@color/button_labels"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:id="@+id/button_save_place"
             android:layout_weight="1"
             android:layout_margin="4dp" />
@@ -54,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="Update"
             android:textColor="@color/button_labels"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:id="@+id/button_update_place"
             android:layout_weight="1"
             android:layout_margin="4dp" />
@@ -64,7 +66,7 @@
             android:layout_height="wrap_content"
             android:text="Delete"
             android:textColor="@color/button_labels"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:id="@+id/button_delete_place"
             android:layout_weight="1"
             android:layout_margin="4dp" />
