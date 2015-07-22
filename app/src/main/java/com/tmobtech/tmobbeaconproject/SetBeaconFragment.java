@@ -1,15 +1,15 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,7 +30,6 @@ import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,6 +162,41 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (v.getId() == refreshBtn.getId()) {
 
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+
+                alertDialog.setTitle("Confirm Bluetooth");
+
+                // Setting Dialog Message
+                alertDialog.setMessage("Are you sure you want open Bluetooth?");
+
+                // Setting Icon to Dialog
+                alertDialog.setIcon(R.drawable.delete);
+
+                // Setting Positive "Yes" Button
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        setBluetooth(true);
+
+                        Toast.makeText(getActivity(), "You clicked on YES", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Setting Negative "NO" Button
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to invoke NO event
+                        Toast.makeText(getActivity(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+
+                // Showing Alert Message
+
+                if(!setBluetooth(true))
+                alertDialog.show();
+
+
                 list = findBeacon.ls;
                 com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
                 spinner.setAdapter(spinnerAdapter);
@@ -204,10 +238,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             }
         } catch (NullPointerException e) {
             Log.e(TAG, e.toString());
-        }
-
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
 
@@ -216,21 +247,18 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
     private void kaydet() {
 
-        boolean isAdded=false;
+        boolean isAdded = false;
         try {
             final BeaconMarkerView beaconMarkerView = new BeaconMarkerView(getActivity());
 
             Beacon beacon = new Beacon();
 
-            if (markerName.getText().toString().trim().length()>0)
-            {
+            if (markerName.getText().toString().trim().length() > 0) {
 
-                List<Beacon> list=Utility.getBeaconList(mapId,getActivity());
-                for (int i=0;i<list.size();i++)
-                {
-                    if (((org.altbeacon.beacon.Beacon)spinner.getSelectedItem() ).getBluetoothAddress().equals(list.get(i).getMacAddress()) )
-                    {
-                        isAdded=true;
+                List<Beacon> list = Utility.getBeaconList(mapId, getActivity());
+                for (int i = 0; i < list.size(); i++) {
+                    if (((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress().equals(list.get(i).getMacAddress())) {
+                        isAdded = true;
                     }
                 }
 
@@ -291,34 +319,22 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
 
                     beaconMarkerView.setBeacon(beacon);
-                }
-                else
-                    Toast.makeText(getActivity(),"Mac Adress Must be Unique",Toast.LENGTH_LONG).show();
-            }
-            else
-                Toast.makeText(getActivity(),"Beacon cannot be Null",Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getActivity(), "Mac Adress Must be Unique", Toast.LENGTH_LONG).show();
+            } else
+                Toast.makeText(getActivity(), "Beacon cannot be Null", Toast.LENGTH_LONG).show();
 
 
-
-
+        } catch (SQLiteConstraintException e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getActivity(), "MacAdress must be unique", Toast.LENGTH_LONG).show();
+        } catch (NullPointerException e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getActivity(), "Beacon or MacAdress cannot be Null", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getActivity(), "Mac adress must be unique", Toast.LENGTH_LONG).show();
         }
-
-            catch(SQLiteConstraintException e)
-            {
-                Log.e(TAG, e.getMessage());
-                Toast.makeText(getActivity(), "MacAdress must be unique", Toast.LENGTH_LONG).show();
-            }
-            catch(NullPointerException e)
-            {
-                Log.e(TAG, e.getMessage());
-                Toast.makeText(getActivity(), "Beacon or MacAdress cannot be Null", Toast.LENGTH_LONG).show();
-            }
-
-            catch(Exception e){
-                Log.e(TAG, e.getMessage());
-                Toast.makeText(getActivity(), "Mac adress must be unique", Toast.LENGTH_LONG).show();
-            }
-
 
 
     }
@@ -427,5 +443,19 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     public void onPause() {
         super.onPause();
         findBeacon.stopBeaconBindService();
+    }
+
+    public static boolean setBluetooth(boolean enable) {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        boolean isEnabled = bluetoothAdapter.isEnabled();
+//        if (isEnabled)
+//            return false;
+        if (enable && !isEnabled) {
+            return bluetoothAdapter.enable();
+        } else if (!enable && isEnabled) {
+            return bluetoothAdapter.disable();
+        }
+
+        return true;
     }
 }
