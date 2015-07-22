@@ -11,7 +11,7 @@
 
         <EditText
             android:id="@+id/editText"
-            android:layout_width="272dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/textView"
@@ -20,13 +20,13 @@
 
         <ImageButton
             android:id="@+id/button3"
-            android:layout_width="82dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/button2"
             android:layout_toEndOf="@+id/button2"
             android:text="Refresh"
             android:layout_gravity="right"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:layout_margin="4dp"
             android:padding="8dp"
             android:src="@drawable/ic_refresh"/>
@@ -43,15 +43,9 @@
         android:lines="1"
         android:text="Pls Select a Beacon"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"></RelativeLayout>
-
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/editText"
         android:layout_below="@+id/textView2"
@@ -70,7 +64,7 @@
             android:layout_below="@+id/spinner"
             android:text="Save"
             android:layout_weight="1"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:layout_margin="8dp"/>
 
         <Button
@@ -82,7 +76,7 @@
             android:layout_toEndOf="@+id/button"
             android:text="Delete"
             android:layout_weight="1"
-            android:background="@color/button_normal"
+            android:background="@drawable/button_bg"
             android:layout_margin="8dp"/>
 
 
