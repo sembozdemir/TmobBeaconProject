@@ -162,39 +162,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (v.getId() == refreshBtn.getId()) {
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
-                alertDialog.setTitle("Confirm Bluetooth");
-
-                // Setting Dialog Message
-                alertDialog.setMessage("Are you sure you want open Bluetooth?");
-
-                // Setting Icon to Dialog
-                alertDialog.setIcon(R.drawable.delete);
-
-                // Setting Positive "Yes" Button
-                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        setBluetooth(true);
-
-                        Toast.makeText(getActivity(), "You clicked on YES", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                // Setting Negative "NO" Button
-                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to invoke NO event
-                        Toast.makeText(getActivity(), "You clicked on NO", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
-                    }
-                });
 
                 // Showing Alert Message
-
-                if(!setBluetooth(true))
-                alertDialog.show();
 
 
                 list = findBeacon.ls;

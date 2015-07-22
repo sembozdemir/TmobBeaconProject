@@ -125,6 +125,18 @@ public class Utility {
 
     public static List<BeaconPower> getCheckedBeaconPowers(List<BeaconPower> beaconPowerList, FindBeacon findBeacon, long mapId, Activity context) {
         List<BeaconPower> allBeaconPowers = getBeaconPowers(findBeacon, mapId, context);
-        return null;
+        for (int i=0;i<beaconPowerList.size();i++)
+        {
+            for (int j=0;j<allBeaconPowers.size();j++)
+            {
+                if (beaconPowerList.get(i).getBeacon().getMacAddress().equals(allBeaconPowers.get(j).getBeacon().getMacAddress()))
+                {
+                    allBeaconPowers.get(j).setAdded(true);
+                }
+                else
+                    allBeaconPowers.get(j).setAdded(false);
+            }
+        }
+        return allBeaconPowers;
     }
 }
