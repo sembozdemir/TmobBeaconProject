@@ -50,6 +50,7 @@ public class Utility {
 
                 } while (cursor.moveToNext());
             }
+            cursor.close();
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -88,6 +89,7 @@ public class Utility {
                 placeList.add(place);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return placeList;
     }
 
@@ -103,6 +105,7 @@ public class Utility {
                 beaconPowerList.add(beaconPower);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return beaconPowerList;
     }
 
@@ -116,6 +119,7 @@ public class Utility {
             beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
             beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
         }
+        cursor.close();
         return beacon;
     }
 }
