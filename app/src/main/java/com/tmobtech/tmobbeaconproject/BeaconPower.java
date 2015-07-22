@@ -5,13 +5,13 @@ package com.tmobtech.tmobbeaconproject;
  */
 public class BeaconPower {
     private Beacon beacon;
-    private float distance;
+    private double distance;
     private boolean isAdded;
 
     public BeaconPower() {
     }
 
-    public BeaconPower(Beacon beacon, float distance, boolean isAdded) {
+    public BeaconPower(Beacon beacon, double distance, boolean isAdded) {
         this.beacon = beacon;
         this.distance = distance;
         this.isAdded = isAdded;
@@ -25,7 +25,7 @@ public class BeaconPower {
         this.beacon = beacon;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 

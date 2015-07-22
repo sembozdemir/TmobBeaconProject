@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.tmobtech.tmobbeaconproject.Beacon;
+import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.BeaconPower;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
@@ -56,7 +57,29 @@ public class Utility {
 
     }
 
-    public static BeaconPower[] getBeaconPowers(long mapID) {
-        return new BeaconPower[0];
+    public static List<BeaconPower> getBeaconPowers(long mapID,Activity activity) {
+
+
+        List<Beacon> list=getBeaconList(mapID,activity);
+        FindBeacon findBeacon=new FindBeacon(activity);
+        List<org.altbeacon.beacon.Beacon> ls= findBeacon.ls;
+        List<BeaconPower> beaconPowerList=new ArrayList<>();
+        for (int i=0;i<list.size();i++)
+        {
+            for (int j=0;j<ls.size();j++)
+            {
+                if (list.get(i).getMacAddress().equals(ls.get(j).getBluetoothAddress()))
+                {
+                    BeaconPower beaconPower=new BeaconPower(list.get(i),ls.get(j).getDistance(),false);
+                    beaconPowerList.add(beaconPower);
+                }
+            }
+
+
+        }
+
+        findBeacon.stopBeaconBindService();
+
+        return beaconPowerList;
     }
 }
