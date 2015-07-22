@@ -57,11 +57,11 @@ public class Utility {
 
     }
 
-    public static List<BeaconPower> getBeaconPowers(long mapID,Activity activity) {
+    public static List<BeaconPower> getBeaconPowers(FindBeacon findBeacon,long mapID,Activity activity) {
 
 
         List<Beacon> list=getBeaconList(mapID,activity);
-        FindBeacon findBeacon=new FindBeacon(activity);
+
         List<org.altbeacon.beacon.Beacon> ls= findBeacon.ls;
         List<BeaconPower> beaconPowerList=new ArrayList<>();
         for (int i=0;i<list.size();i++)
@@ -78,7 +78,7 @@ public class Utility {
 
         }
 
-        findBeacon.stopBeaconBindService();
+
 
         return beaconPowerList;
     }
