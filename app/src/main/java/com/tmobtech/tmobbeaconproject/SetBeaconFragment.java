@@ -222,13 +222,13 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             Beacon beacon = new Beacon();
 
-            if (markerName.getText().toString().trim() != "") ;
+            if (markerName.getText().toString().trim().length()>0)
             {
 
                 List<Beacon> list=Utility.getBeaconList(mapId,getActivity());
                 for (int i=0;i<list.size();i++)
                 {
-                    if (((Beacon)spinner.getSelectedItem() ).getMacAddress().equals(list.get(i).getMacAddress()) )
+                    if (((org.altbeacon.beacon.Beacon)spinner.getSelectedItem() ).getBluetoothAddress().equals(list.get(i).getMacAddress()) )
                     {
                         isAdded=true;
                     }
@@ -292,7 +292,14 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
                     beaconMarkerView.setBeacon(beacon);
                 }
+                else
+                    Toast.makeText(getActivity(),"Mac Adress Must be Unique",Toast.LENGTH_LONG).show();
             }
+            else
+                Toast.makeText(getActivity(),"Beacon cannot be Null",Toast.LENGTH_LONG).show();
+
+
+
 
         }
 
