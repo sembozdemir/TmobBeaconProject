@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
@@ -207,7 +208,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 }
                 catch (Exception e)
                 {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                 }
 
 
@@ -217,69 +218,89 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         final BeaconMarkerView beaconMarkerView = new BeaconMarkerView(getActivity());
 
         Beacon beacon = new Beacon();
-        beacon.setBeaconName(markerName.getText().toString());
-        beaconMarkerView.setBeacon(beacon);
-
         try {
-            beacon.setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-        } catch (Exception e) {
+            beacon.setBeaconName(markerName.getText().toString());
+            try {
+                try {
+                    beacon.setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+                }
+                catch (Exception e)
+                {
+                    Log.e(TAG,e.toString());
+                    Toast.makeText(getActivity(),"Mac adress must be Unique",Toast.LENGTH_LONG).show();
+                }
 
-        }
+                beaconMarkerView.setX(x - 64);
+                beaconMarkerView.setY(y - 64);
+                frameLayout.addView(beaconMarkerView, layoutParams1);
+                try {
+                    mapId = placeBeaconActivity.getMapID();
+                } catch (Exception e) {
+                    Log.e(TAG, "MapIdError");
+                }
 
-        beaconMarkerView.setX(x - 64);
-        beaconMarkerView.setY(y - 64);
-        frameLayout.addView(beaconMarkerView, layoutParams1);
-        try {
-            mapId = placeBeaconActivity.getMapID();
-        } catch (Exception e) {
-            Log.e(TAG, "MapIdError");
-        }
+                try {
 
-        try {
+                    beacon.setId(myDbHelper.insertBeacon(markerName.getText().toString(),
+                            beacon.getMacAddress(),
+                            beaconMarkerView.getX(),
+                            beaconMarkerView.getY(),
+                            mapId));
 
-            beacon.setId(myDbHelper.insertBeacon(markerName.getText().toString(),
-                    beacon.getMacAddress(),
-                    beaconMarkerView.getX(),
-                    beaconMarkerView.getY(),
-                    mapId));
+                    beaconMarkerView.setBeacon(beacon);
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
 
-            beaconMarkerView.setBeacon(beacon);
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
+                dialog.cancel();
 
-        dialog.cancel();
+                beaconMarkerView.setOnClickListener(new View.OnClickListener() {
 
-        beaconMarkerView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                markerViewClass = (BeaconMarkerView) v;
-                markerName.setText(((BeaconMarkerView) markerViewClass).getBeacon().getBeaconName());
-                selectedBeacon.setText(((BeaconMarkerView) markerViewClass).getBeacon().getMacAddress());
-                kaydetDialogBtn.setText("Update");
-                kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        markerViewClass = (BeaconMarkerView) v;
+                        markerName.setText(((BeaconMarkerView) markerViewClass).getBeacon().getBeaconName());
+                        selectedBeacon.setText(((BeaconMarkerView) markerViewClass).getBeacon().getMacAddress());
+                        kaydetDialogBtn.setText("Update");
+                        kaydetDialogBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        beaconMarkerView.getBeacon().setBeaconName(markerName.getText().toString());
-                        beaconMarkerView.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                        myDbHelper.updateBeaconName(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getBeaconName());
-                        try {
-                            myDbHelper.updateBeaconMacAddress(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getMacAddress());
+                                beaconMarkerView.getBeacon().setBeaconName(markerName.getText().toString());
+                                beaconMarkerView.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+                                myDbHelper.updateBeaconName(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getBeaconName());
+                                try {
+                                    myDbHelper.updateBeaconMacAddress(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getMacAddress());
 
-                        }
-                        catch (Exception e)
-                        {}
-                         dialog.cancel();
+                                } catch (Exception e) {
+                                }
+                                dialog.cancel();
+
+                            }
+                        });
+
+                        dialog.show();
 
                     }
                 });
-
-                dialog.show();
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+                Toast.makeText(getActivity(),"You Must Select a Beacon",Toast.LENGTH_LONG).show();
 
             }
-        });
+
+
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG,e.toString());
+            Toast.makeText(getActivity(),"Without BeaconName",Toast.LENGTH_LONG).show();
+        }
+
+        beaconMarkerView.setBeacon(beacon);
+
+
+
 
     }
 
