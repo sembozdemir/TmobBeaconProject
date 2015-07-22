@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Ozberk on 15.7.2015.
  */
-public class SetPlaceFragment extends Fragment implements View.OnTouchListener, View.OnClickListener {
+public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private static final String LOG_TAG = SetPlaceFragment.class.getSimpleName();
 
     private FrameLayout frameLayout;
@@ -74,6 +74,14 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener, 
                     placeMarkerView.setX(place.getApsis());
                     placeMarkerView.setY(place.getOrdinat());
                     placeMarkerView.setPlace(place);
+                    placeMarkerView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Place place = ((PlaceMarkerView) v).getPlace();
+                            createDialog(place);
+                            dialog.show();
+                        }
+                    });
                     frameLayout.addView(placeMarkerView, layoutParams1);
                 }
             }
@@ -147,7 +155,10 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener, 
             dialog.setTitle("Edit Place");
             saveDialogButton.setVisibility(View.GONE);
             beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),
-                    Utility.getCheckedBeaconPowers(place.getBeaconPowerList(), findBeacon, mapId, context)); // TODO: yanlış olabilir
+                    Utility.getCheckedBeaconPowers(place.getBeaconPowerList(),
+                            findBeacon,
+                            parentActivity.getMapID(),
+                            getActivity()));
             beaconPowerListView.setAdapter(beaconPowerListAdapter);
             placeNameEditText.setText(place.getPlaceName());
             updateDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -197,11 +208,19 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener, 
                     PlaceMarkerView placeMarkerView = new PlaceMarkerView(getActivity());
                     placeMarkerView.setX(x - 64);
                     placeMarkerView.setY(y - 64);
-                    placeMarkerView.setOnClickListener(SetPlaceFragment.this);
                     Place place = new Place(placeNameEditText.getText().toString(),
                             placeMarkerView.getX(),
                             placeMarkerView.getY(),
                             checkedBeaconPowers);
+                    placeMarkerView.setPlace(place);
+                    placeMarkerView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Place place = ((PlaceMarkerView) v).getPlace();
+                            createDialog(place);
+                            dialog.show();
+                        }
+                    });
                     savePlace(place);
                     frameLayout.addView(placeMarkerView, layoutParams1);
                     dialog.cancel();
@@ -224,17 +243,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener, 
         List<BeaconPower> beaconPowers = place.getBeaconPowerList();
         for (BeaconPower beaconPower : beaconPowers) {
             myDbHelper.insertBeaconMeasure(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.drawable.ic_place_marker:
-                Place place = ((PlaceMarkerView) v).getPlace();
-                createDialog(place);
-                dialog.show();
-                break;
         }
     }
 }
