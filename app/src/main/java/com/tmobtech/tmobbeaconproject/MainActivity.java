@@ -31,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
     private GridView mGridView;
     private MyDbHelper mDbHelper;
     private List<ParseObject> todos;
+    private MyGridAdapter myGridAdapter;
 
 
     @Override
@@ -89,9 +90,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         deleteMap(arg2);
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+                        updateGridContent();
 
                         Toast.makeText(getApplicationContext(), "You clicked on YES", Toast.LENGTH_SHORT).show();
                     }
@@ -117,16 +116,20 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private void updateGridContent() {
+        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
+        myGridAdapter = new MyGridAdapter(this, beaconMaps);
+
+        mGridView.setAdapter(myGridAdapter);
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
         // Create grid adapter and set it
-        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
-        MyGridAdapter myGridAdapter = new MyGridAdapter(this, beaconMaps);
-
-        mGridView.setAdapter(myGridAdapter);
+        updateGridContent();
     }
 
     public void deleteMap(int position) {

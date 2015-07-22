@@ -228,7 +228,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 List<Beacon> list=Utility.getBeaconList(mapId,getActivity());
                 for (int i=0;i<list.size();i++)
                 {
-                    if (((Beacon)spinner.getSelectedItem() ).getMacAddress().equals(list.get(i).getMacAddress()) )
+                    if (((org.altbeacon.beacon.Beacon)spinner.getSelectedItem() ).getBluetoothAddress().equals(list.get(i).getMacAddress()) )
                     {
                         isAdded=true;
                     }

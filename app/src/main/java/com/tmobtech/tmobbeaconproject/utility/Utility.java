@@ -122,4 +122,9 @@ public class Utility {
         cursor.close();
         return beacon;
     }
+
+    public static List<BeaconPower> getCheckedBeaconPowers(List<BeaconPower> beaconPowerList, FindBeacon findBeacon, long mapId, Activity context) {
+        List<BeaconPower> allBeaconPowers = getBeaconPowers(findBeacon, mapId, context);
+        return null;
+    }
 }

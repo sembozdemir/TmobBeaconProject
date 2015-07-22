@@ -14,7 +14,11 @@ public class Place {
     private List<BeaconPower> beaconPowerList;
 
     public Place(long placeId, String placeName, float apsis, float ordinat, List<BeaconPower> beaconPowerList) {
-
+        this.placeId = placeId;
+        this.placeName = placeName;
+        this.apsis = apsis;
+        this.ordinat = ordinat;
+        this.beaconPowerList = beaconPowerList;
     }
 
     public Place() {
