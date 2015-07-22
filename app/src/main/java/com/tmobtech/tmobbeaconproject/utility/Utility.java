@@ -3,13 +3,10 @@ package com.tmobtech.tmobbeaconproject.utility;
 import android.app.Activity;
 import android.database.Cursor;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.tmobtech.tmobbeaconproject.Beacon;
+import com.tmobtech.tmobbeaconproject.BeaconPower;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
-import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,4 +62,7 @@ public class Utility {
 
     }
 
+    public static BeaconPower[] getBeaconPowers(long mapID) {
+        return new BeaconPower[0];
+    }
 }
