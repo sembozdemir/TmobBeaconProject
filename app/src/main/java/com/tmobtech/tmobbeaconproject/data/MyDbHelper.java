@@ -167,7 +167,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_PLACES_NAME, whereClause, whereArgs);
     }
 
-    public long insertBeaconMeasure(long beaconId, long placeId, float power) {
+    public long insertBeaconMeasure(long beaconId, long placeId, double power) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_BEACON_MEASURE_BEACON_ID, beaconId);

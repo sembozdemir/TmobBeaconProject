@@ -22,7 +22,9 @@ import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
+import com.tmobtech.tmobbeaconproject.views.PlaceMarkerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private MyDbHelper myDbHelper;
     private PlaceBeaconActivity parentActivity;
     private List<Beacon> beaconList;
+    private List<Place> placeList;
     private FrameLayout.LayoutParams layoutParams1;
     private float x;
     private float y;
@@ -54,11 +57,30 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         myDbHelper = new MyDbHelper(getActivity());
         parentActivity = (PlaceBeaconActivity) getActivity();
         setImageView(parentActivity.getImagePath());
-        beaconList = Utility.getBeaconList(parentActivity.getMapID(), getActivity()) ;
+        beaconList = Utility.getBeaconList(parentActivity.getMapID(), getActivity());
+        placeList = Utility.getPlaceList(getActivity(), parentActivity.getMapID());
         placeBeacons(beaconList);
+        placePlaces(placeList);
         findBeacon = new FindBeacon(getActivity());
 
         return view;
+    }
+
+    private void placePlaces(List<Place> placeList) {
+        try {
+            if (placeList.size() > 0) {
+                for(Place place : placeList) {
+                    final PlaceMarkerView placeMarkerView = new PlaceMarkerView(getActivity());
+                    placeMarkerView.setX(place.getApsis());
+                    placeMarkerView.setY(place.getOrdinat());
+                    placeMarkerView.setPlace(place);
+                    frameLayout.addView(placeMarkerView, layoutParams1);
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "placePlaces Error: " + e.toString());
+        }
     }
 
     @Override
@@ -103,16 +125,16 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
 
         if (v.getId() == mapImageView.getId()) {
-            dialogCreate("");
-            dialog.show();
             x = event.getX();
             y = event.getY();
+            createDialog("");
+            dialog.show();
 
         }
         return false;
     }
 
-    private void dialogCreate(String placeName) {
+    private void createDialog(final String placeName) {
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.dialog_place);
         ImageButton refreshButton = (ImageButton) dialog.findViewById(R.id.imageButton_refresh);
@@ -120,7 +142,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         Button delDialogButton = (Button) dialog.findViewById(R.id.button_delete_place);
         Button updateDialogButton = (Button) dialog.findViewById(R.id.button_update_place);
         EditText placeNameEditText = (EditText) dialog.findViewById(R.id.editText_place_name);
-        ListView beaconPowerListView = (ListView) dialog.findViewById(R.id.listView_beacon);
+        final ListView beaconPowerListView = (ListView) dialog.findViewById(R.id.listView_beacon);
         final BeaconPowerListAdapter beaconPowerListAdapter;
         if (!placeName.equals("")) { // it will be edit place dialog
             dialog.setTitle("Edit Place");
@@ -154,14 +176,29 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
             refreshButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    beaconPowerListAdapter.notifyAll();
+                    beaconPowerListAdapter.clear();
+                    beaconPowerListAdapter.addAll(
+                            Utility.getBeaconPowers(findBeacon,
+                                    parentActivity.getMapID(),
+                                    getActivity()));
+                    beaconPowerListAdapter.notifyDataSetChanged();
                 }
             });
 
             saveDialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    savePlace();
+                    List<BeaconPower> checkedBeaconPowers = new ArrayList<BeaconPower>();
+                    for (int i = 0; i < beaconPowerListAdapter.getCount(); i++) {
+                        BeaconPower beaconPower = beaconPowerListAdapter.getItem(i);
+                        beaconPower.setAdded(true);
+                    }
+                    Place place = new Place(placeName, x, y, checkedBeaconPowers);
+                    PlaceMarkerView placeMarkerView = new PlaceMarkerView(getActivity());
+                    placeMarkerView.setX(x);
+                    placeMarkerView.setY(y);
+                    frameLayout.addView(placeMarkerView, layoutParams1);
+                    savePlace(place);
                     dialog.cancel();
                 }
             });
@@ -176,7 +213,12 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         Toast.makeText(getActivity(), "deleted", Toast.LENGTH_LONG).show();
     }
 
-    private void savePlace() {
+    private void savePlace(Place place) {
         Toast.makeText(getActivity(), "saved", Toast.LENGTH_LONG).show();
+        myDbHelper.insertPlace(place.getPlaceName(), place.getApsis(), place.getOrdinat(), parentActivity.getMapID());
+        List<BeaconPower> beaconPowers = place.getBeaconPowerList();
+        for (BeaconPower beaconPower : beaconPowers) {
+            myDbHelper.insertBeaconMeasure(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
+        }
     }
 }
