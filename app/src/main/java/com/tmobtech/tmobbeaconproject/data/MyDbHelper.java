@@ -58,7 +58,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_TABLE_BEACONS = "CREATE TABLE " + TABLE_BEACONS_NAME + "(" +
                 COLUMN_BEACON_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_BEACON_NAME + " TEXT, " +
-                COLUMN_BEACON_MAC_ADDRESS + " TEXT UNIQUE, " +
+                COLUMN_BEACON_MAC_ADDRESS + " TEXT, " +
                 COLUMN_BEACON_APSIS + " REAL, " +
                 COLUMN_BEACON_ORDINAT + " REAL, " +
                 COLUMN_BEACON_MAP_ID + " INTEGER, " +
