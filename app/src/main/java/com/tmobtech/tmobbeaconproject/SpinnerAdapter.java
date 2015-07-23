@@ -2,17 +2,13 @@ package com.tmobtech.tmobbeaconproject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.altbeacon.beacon.*;
 import org.altbeacon.beacon.Beacon;
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -34,6 +30,8 @@ public class SpinnerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (list == null)
+            return 0;
         return list.size();
     }
 

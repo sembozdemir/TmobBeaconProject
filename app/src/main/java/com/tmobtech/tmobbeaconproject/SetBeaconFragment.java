@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -66,6 +67,12 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     FragmentTransaction fragmentTransaction;
     private static final int CONTENT_VIEW_ID = 10101010;
     private   BluetoothAdapter mBlue = BluetoothAdapter.getDefaultAdapter();
+    private SpinnerRefreshTimer spinnerRefreshTimer;
+
+
+
+
+
 
 
     @Nullable
@@ -75,6 +82,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
         intentPlaceBeacon = (Button) view.findViewById(R.id.button4);
 
+        spinnerRefreshTimer = new SpinnerRefreshTimer(10000,1000);
 
         intentPlaceBeacon.setOnClickListener(this);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame2);
@@ -201,20 +209,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     alertDialog.show();
                 }
 
-                list = findBeacon.ls;
-                com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
-                spinner.setAdapter(spinnerAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selectedBeacon.setText(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                    }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+                refreshSpinner();
 
             }
 
@@ -248,6 +244,24 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
 
     }
+
+    private void refreshSpinner() {
+        list = findBeacon.ls;
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), list);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedBeacon.setText(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
 
     private void kaydet() {
 
@@ -427,6 +441,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     private void dialogCreate()
 
     {
+
+        spinnerRefreshTimer.start();
         dialog = new Dialog(getActivity());
         dialog.setTitle("Beacon Tanimlama");
         dialog.setContentView(R.layout.dialog);
@@ -463,5 +479,29 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         }
 
         return true;
+    }
+    public class SpinnerRefreshTimer extends CountDownTimer{
+
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public SpinnerRefreshTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            refreshSpinner();
+        }
+
+        @Override
+        public void onFinish() {
+            spinnerRefreshTimer.cancel();
+            spinnerRefreshTimer.start();
+        }
     }
 }
