@@ -233,7 +233,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             if (v.getId() == intentPlaceBeacon.getId()) {
                 setPlaceFragment = new SetPlaceFragment();
                 fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(CONTENT_VIEW_ID, setPlaceFragment);
+                fragmentTransaction.replace(CONTENT_VIEW_ID, setPlaceFragment,"SetPlaceFragment");
 
 
                 fragmentTransaction.addToBackStack(null);

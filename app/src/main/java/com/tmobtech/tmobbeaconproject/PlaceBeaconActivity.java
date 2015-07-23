@@ -36,7 +36,7 @@ public class PlaceBeaconActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             Fragment newFragment = new SetBeaconFragment();
             FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
-            ft.add(CONTENT_VIEW_ID, newFragment).commit();
+            ft.add(CONTENT_VIEW_ID, newFragment,"SetBeaconFragment").commit();
         }
         try {
             initialize();

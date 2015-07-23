@@ -1,9 +1,11 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -70,7 +72,12 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         intentPrevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: geri butonu
+
+                getActivity().getSupportFragmentManager().popBackStack();
+
+
+
+
             }
         });
 
