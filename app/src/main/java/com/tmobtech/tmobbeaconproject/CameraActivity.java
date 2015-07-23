@@ -145,7 +145,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // if the result is capturing Image
         if (requestCode == SELECT_PHOTO)
             if (resultCode == RESULT_OK) {
                 try {
@@ -158,6 +157,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 } catch (Exception e) {
                     Log.e("Gallery ge select error", e.getMessage());
                 }
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
             }
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
@@ -166,12 +167,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 Log.d(LOG_TAG, "ImagePath from Camera: " + fileUri.toString());
 
             } else if (resultCode == RESULT_CANCELED) {
-
-                Toast.makeText(getApplicationContext(),
-                        "User cancelled image capture", Toast.LENGTH_SHORT)
-                        .show();
+                finish();
             } else {
-
                 Toast.makeText(getApplicationContext(),
                         "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
                         .show();
