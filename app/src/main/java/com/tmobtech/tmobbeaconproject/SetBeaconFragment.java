@@ -22,7 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +62,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     List<Beacon> listBeacon;
     FindBeacon findBeacon;
     TextView selectedBeacon;
-    Button intentPlaceBeacon;
     SetPlaceFragment setPlaceFragment;
     FragmentTransaction fragmentTransaction;
     private static final int CONTENT_VIEW_ID = 10101010;
@@ -76,15 +74,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
-        intentPlaceBeacon = (Button) view.findViewById(R.id.button4);
 
         UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setBeaconPage");
-
-        intentPlaceBeacon.setOnClickListener(this);
-        frameLayout = (FrameLayout) view.findViewById(R.id.frame2);
-        mapImageView = (ImageView) view.findViewById(R.id.imageView);
-
+        
         initialize(view);
+        mapImageView = (ImageView) view.findViewById(R.id.imageViewBeacon);
 
 
         try {
@@ -138,7 +132,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
         if (v.getId() == mapImageView.getId()) {
 
             dialogCreate();
@@ -147,7 +140,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             y = event.getY();
 
         }
-
         return false;
     }
 
@@ -230,26 +222,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         } catch (Exception e) {
         }
-
-
-        try {
-            if (v.getId() == intentPlaceBeacon.getId()) {
-                setPlaceFragment = new SetPlaceFragment();
-                fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(CONTENT_VIEW_ID, setPlaceFragment,"SetPlaceFragment");
-
-
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-            }
-        } catch (NullPointerException e) {
-            Log.e(TAG, e.toString());
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
-
-
     }
 
     private void kaydet() {

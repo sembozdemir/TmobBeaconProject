@@ -3,35 +3,23 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frame2"
+        android:id="@+id/frameBeacon"
         android:layout_weight="1">
 
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageViewBeacon"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
 
     </FrameLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"
-            android:id="@+id/button4"
-            android:background="@drawable/button_bg"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
 
 
 </LinearLayout>
