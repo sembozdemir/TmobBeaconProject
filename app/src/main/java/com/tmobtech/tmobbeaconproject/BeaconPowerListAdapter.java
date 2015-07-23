@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         BeaconPower beaconPower = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
@@ -47,6 +48,19 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
         viewHolder.textViewMacAddress.setText(beaconPower.getBeacon().getMacAddress());
         viewHolder.textViewDistance.setText("" + beaconPower.getDistance());
         viewHolder.checkBoxIsAdded.setChecked(beaconPower.isAdded());
+
+        viewHolder.checkBoxIsAdded.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked)
+                {
+                    SetPlaceFragment.beaconPowersListe.get(position).setAdded(true);
+                }
+                else
+                    SetPlaceFragment.beaconPowersListe.get(position).setAdded(false);
+
+            }
+        });
         // Return the completed view to render on screen
         return convertView;
     }

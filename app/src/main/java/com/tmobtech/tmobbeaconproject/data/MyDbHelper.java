@@ -319,7 +319,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.update(TABLE_PLACES_NAME, values, whereClause, whereArgs);
     }
 
-    public int updateBeaconMeasured(long beaconId, long placeId, float power) {
+    public int updateBeaconMeasured(long beaconId, long placeId, double power) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_MEASURE_BEACON_ID + "=?" + COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
         String[] whereArgs = new String[]{

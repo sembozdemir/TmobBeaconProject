@@ -93,7 +93,7 @@ public class Utility {
         return placeList;
     }
 
-    private static List<BeaconPower> getBeaconPowersFromDb(Context context, long placeId) {
+    public static List<BeaconPower> getBeaconPowersFromDb(Context context, long placeId) {
         List<BeaconPower> beaconPowerList = new ArrayList<>();
         MyDbHelper myDbHelper = new MyDbHelper(context);
         Cursor cursor = myDbHelper.getMeasurePowersForPlace(placeId);
@@ -131,6 +131,7 @@ public class Utility {
             {
                 if (beaconPowerList.get(i).getBeacon().getMacAddress().equals(allBeaconPowers.get(j).getBeacon().getMacAddress()))
                 {
+                    if (beaconPowerList.get(i).isAdded())
                     allBeaconPowers.get(j).setAdded(true);
                 }
                 else
