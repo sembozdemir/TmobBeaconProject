@@ -65,6 +65,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     SetPlaceFragment setPlaceFragment;
     FragmentTransaction fragmentTransaction;
     private static final int CONTENT_VIEW_ID = 10101010;
+    private   BluetoothAdapter mBlue = BluetoothAdapter.getDefaultAdapter();
+
 
     @Nullable
     @Override
@@ -162,10 +164,42 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (v.getId() == refreshBtn.getId()) {
 
+                Log.v("BlueTooth",mBlue.toString());
+                if(!mBlue.isEnabled()){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
+                    alertDialog.setTitle("Confirm Bluetooth");
 
-                // Showing Alert Message
+                    // Setting Dialog Message
+                    alertDialog.setMessage("Are you sure you want open Bluetooth?");
 
+                    // Setting Icon to Dialog
+                    alertDialog.setIcon(R.drawable.ic_bluetooth);
+
+                    // Setting Positive "Yes" Button
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+//                        setBluetooth(true);
+                            mBlue = BluetoothAdapter.getDefaultAdapter();
+                            mBlue.enable();
+                            Toast.makeText(getActivity(), "You clicked on YES", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    // Setting Negative "NO" Button
+                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to invoke NO event
+                            Toast.makeText(getActivity(), "You clicked on NO", Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        }
+                    });
+
+                    // Showing Alert Message
+
+                    alertDialog.show();
+                }
 
                 list = findBeacon.ls;
                 com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
@@ -421,7 +455,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 //        if (isEnabled)
 //            return false;
         if (enable && !isEnabled) {
+
             return bluetoothAdapter.enable();
+
         } else if (!enable && isEnabled) {
             return bluetoothAdapter.disable();
         }

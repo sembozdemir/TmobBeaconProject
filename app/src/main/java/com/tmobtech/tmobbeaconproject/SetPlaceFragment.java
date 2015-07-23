@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -25,8 +24,8 @@ import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
 import com.tmobtech.tmobbeaconproject.views.PlaceMarkerView;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Ozberk on 15.7.2015.
