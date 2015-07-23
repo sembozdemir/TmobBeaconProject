@@ -166,6 +166,8 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
             updateDialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    place.setPlaceName(placeNameEditText.getText().toString());
+                    place.setBeaconPowerList(beaconPowersListe);
 
                     updatePlace(place);
                     dialog.cancel();
@@ -233,15 +235,42 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
     private void updatePlace(Place place) {
 
+        boolean isAddedFromDb=false;
+        myDbHelper.updatePlaceName(place.getPlaceId(), place.getPlaceName());
         Toast.makeText(getActivity(), "updated", Toast.LENGTH_LONG).show();
-        Long placeId= myDbHelper.insertPlace(place.getPlaceName(), place.getApsis(), place.getOrdinat(), parentActivity.getMapID());
-        place.setPlaceId(placeId);
+
+        List<BeaconPower> beaconPowersFromDb=Utility.getBeaconPowersFromDb(getActivity(),place.getPlaceId());
+
         List<BeaconPower> beaconPowers = place.getBeaconPowerList();
         for (BeaconPower beaconPower : beaconPowers) {
 
             if (beaconPower.isAdded())
-                myDbHelper.updateBeaconMeasured(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
-           
+            {
+                for (int i=0;i<beaconPowersFromDb.size();i++)
+                {
+                    if (beaconPower.getBeacon().getBeaconName().equals(beaconPowersFromDb.get(i).getBeacon().getBeaconName())) {
+                        myDbHelper.updateBeaconMeasured(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
+
+                        isAddedFromDb=true;
+                    }
+                    }
+                if (!isAddedFromDb)
+                    myDbHelper.insertBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId(),beaconPower.getDistance());
+            }
+            else
+            {
+                for (int i=0;i<beaconPowersFromDb.size();i++)
+                {
+                    if (beaconPower.getBeacon().getBeaconName().equals(beaconPowersFromDb.get(i).getBeacon().getBeaconName())) {
+                        myDbHelper.deleteBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId());
+
+
+                    }
+                }
+
+
+            }
+
 
         }
     }

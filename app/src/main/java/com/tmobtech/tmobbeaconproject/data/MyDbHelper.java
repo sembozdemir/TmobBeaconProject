@@ -298,7 +298,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     public int updatePlaceName(long placeId, String newPlaceName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = COLUMN_BEACON_ID + " = ?";
+        String whereClause = COLUMN_PLACE_ID + " = ?";
         String[] whereArgs = new String[]{
                 "" + placeId
         };
@@ -320,13 +320,19 @@ public class MyDbHelper extends SQLiteOpenHelper {
     }
 
     public int updateBeaconMeasured(long beaconId, long placeId, double power) {
+
+        //String query="Update from "+TABLE_BEACON_MEASURE_NAME +"Set";
         SQLiteDatabase db = this.getWritableDatabase();
-        String whereClause = COLUMN_BEACON_MEASURE_BEACON_ID + "=?" + COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
+        String whereClause = COLUMN_BEACON_MEASURE_BEACON_ID + "=? AND " + COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
         String[] whereArgs = new String[]{
-                "" + beaconId + "" + placeId
+                "" + beaconId, "" + placeId
         };
         ContentValues values = new ContentValues();
         values.put(COLUMN_BEACON_MEASURE_POWER, power);
         return db.update(TABLE_BEACON_MEASURE_NAME, values, whereClause, whereArgs);
+    }
+
+    public int deleteBeaconMeasure(long id, long placeId) {
+        return 0;
     }
 }

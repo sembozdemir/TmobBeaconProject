@@ -134,8 +134,7 @@ public class Utility {
                     if (beaconPowerList.get(i).isAdded())
                     allBeaconPowers.get(j).setAdded(true);
                 }
-                else
-                    allBeaconPowers.get(j).setAdded(false);
+
             }
         }
         return allBeaconPowers;
