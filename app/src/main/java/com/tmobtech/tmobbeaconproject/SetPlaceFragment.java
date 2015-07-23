@@ -184,8 +184,9 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
             dialog.setTitle("New Place"); // it will be new place dialog
             updateDialogButton.setVisibility(View.GONE);
             delDialogButton.setVisibility(View.GONE);
-            beaconPowersListe= Utility.getBeaconPowersFromDb(getActivity(),place.getPlaceId());
-            beaconPowersListe=Utility.getCheckedBeaconPowers(beaconPowersListe, findBeacon, parentActivity.getMapID(), getActivity());
+            beaconPowersListe=Utility.getBeaconPowers(findBeacon,parentActivity.getMapID(),getActivity());
+//            beaconPowersListe= Utility.getBeaconPowersFromDb(getActivity(),place.getPlaceId());
+//            beaconPowersListe=Utility.getCheckedBeaconPowers(beaconPowersListe, findBeacon, parentActivity.getMapID(), getActivity());
             beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),
                     beaconPowersListe);
             beaconPowerListView.setAdapter(beaconPowerListAdapter);
@@ -232,7 +233,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     }
 
     private void updatePlace(Place place) {
-   /*
+
         Toast.makeText(getActivity(), "updated", Toast.LENGTH_LONG).show();
         Long placeId= myDbHelper.insertPlace(place.getPlaceName(), place.getApsis(), place.getOrdinat(), parentActivity.getMapID());
         place.setPlaceId(placeId);
@@ -241,10 +242,9 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
             if (beaconPower.isAdded())
                 myDbHelper.updateBeaconMeasured(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
-             else
-            Deletebeaconmeasure
+           
 
-        }*/
+        }
     }
 
 
