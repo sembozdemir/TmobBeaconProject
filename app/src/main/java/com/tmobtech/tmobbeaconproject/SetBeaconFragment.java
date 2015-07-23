@@ -21,14 +21,12 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
