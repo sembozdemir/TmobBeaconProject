@@ -75,6 +75,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
 
+        frameLayout=(FrameLayout) view.findViewById(R.id.frameBeacon);
+
         UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setBeaconPage");
         
         initialize(view);
