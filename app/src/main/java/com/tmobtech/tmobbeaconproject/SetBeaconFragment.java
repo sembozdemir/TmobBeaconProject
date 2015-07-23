@@ -125,7 +125,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         listBeacon = new ArrayList<>();
 
-        findBeacon = new FindBeacon(getActivity());
+        findBeacon = FindBeacon.getInstance(getActivity());
 
 
     }

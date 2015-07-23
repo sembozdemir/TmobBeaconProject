@@ -66,7 +66,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         placeList = Utility.getPlaceList(getActivity(), parentActivity.getMapID());
         placeBeacons(beaconList);
         placePlaces(placeList);
-        findBeacon = new FindBeacon(getActivity());
+        findBeacon = FindBeacon.getInstance(getActivity());
 
         return view;
     }
