@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
+import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
@@ -58,6 +59,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         View view = inflater.inflate(R.layout.setplacefragment, null);
 
 
+        UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setPlacePage");
         initViews(view);
         layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         myDbHelper = new MyDbHelper(getActivity());

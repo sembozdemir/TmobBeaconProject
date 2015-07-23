@@ -21,12 +21,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
+import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
@@ -56,7 +58,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     Dialog dialog;
     Button kaydetDialogBtn;
     ImageButton refreshBtn;
-    Spinner spinner;
+    ListView listView;
     EditText markerName;
     List<Beacon> listBeacon;
     FindBeacon findBeacon;
@@ -66,6 +68,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     FragmentTransaction fragmentTransaction;
     private static final int CONTENT_VIEW_ID = 10101010;
     private   BluetoothAdapter mBlue = BluetoothAdapter.getDefaultAdapter();
+    static int listPosition;
 
 
     @Nullable
@@ -75,6 +78,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         View view = inflater.inflate(R.layout.setbeaconfragment, null);
         intentPlaceBeacon = (Button) view.findViewById(R.id.button4);
 
+        UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setBeaconPage");
 
         intentPlaceBeacon.setOnClickListener(this);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame2);
@@ -203,19 +207,18 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
                 list = findBeacon.ls;
                 com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
-                spinner.setAdapter(spinnerAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                listView.setAdapter(spinnerAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selectedBeacon.setText(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        try {
+                            listPosition=position;
+                            selectedBeacon.setText( list.get(position).getBluetoothAddress());
+                        }
+                        catch (Exception e){}
 
                     }
                 });
-
             }
 
 
@@ -259,9 +262,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (markerName.getText().toString().trim().length() > 0) {
 
-                List<Beacon> list = Utility.getBeaconList(mapId, getActivity());
-                for (int i = 0; i < list.size(); i++) {
-                    if (((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress().equals(list.get(i).getMacAddress())) {
+                final List<Beacon> listFromDb = Utility.getBeaconList(mapId, getActivity());
+                for (int i = 0; i < listFromDb.size(); i++) {
+                    if (((org.altbeacon.beacon.Beacon)list.get(listPosition)).getBluetoothAddress().equals(listFromDb.get(i).getMacAddress())) {
                         isAdded = true;
                     }
                 }
@@ -270,7 +273,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     beacon.setBeaconName(markerName.getText().toString());
 
 
-                    beacon.setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
+                    beacon.setMacAddress(list.get(listPosition).getBluetoothAddress());
 
                     beaconMarkerView.setX(x - 64);
                     beaconMarkerView.setY(y - 64);
@@ -304,11 +307,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                                 @Override
                                 public void onClick(View v) {
 
-                                    beaconMarkerView.getBeacon().setBeaconName(markerName.getText().toString());
-                                    beaconMarkerView.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-                                    myDbHelper.updateBeaconName(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getBeaconName());
-
-                                    myDbHelper.updateBeaconMacAddress(beaconMarkerView.getBeacon().getId(), beaconMarkerView.getBeacon().getMacAddress());
+                                    update(beaconMarkerView);
 
 
                                     dialog.cancel();
@@ -402,25 +401,36 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
 
     private void update(BeaconMarkerView v) {
-        try {
-            v.getBeacon().setBeaconName(markerName.getText().toString());
-        } catch (Exception e) {
-
-        }
-        try {
-            v.getBeacon().setMacAddress(((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-        } catch (Exception e) {
-
+        boolean isAdded = false;
+        final List<Beacon> listFromDb = Utility.getBeaconList(mapId, getActivity());
+        for (int i = 0; i < listFromDb.size(); i++) {
+            if (v.getBeacon().getMacAddress().equals(listFromDb.get(i).getMacAddress())) {
+                isAdded = true;
+            }
         }
 
-        try {
-            myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
-            myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), ((org.altbeacon.beacon.Beacon) spinner.getSelectedItem()).getBluetoothAddress());
-        } catch (Exception e) {
+        if (!isAdded) {
+            try {
+                v.getBeacon().setBeaconName(markerName.getText().toString());
+            } catch (Exception e) {
 
+            }
+            try {
+                v.getBeacon().setMacAddress(list.get(listPosition).getBluetoothAddress());
+            } catch (Exception e) {
+
+            }
+
+            try {
+                myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
+                myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
+            } catch (Exception e) {
+
+            }
+
+            dialog.cancel();
         }
-
-        dialog.cancel();
+        else Toast.makeText(getActivity(),"Mac Adress must be Unique",Toast.LENGTH_LONG).show();
 
     }
 
@@ -434,7 +444,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         silDialogBtn = (Button) dialog.findViewById(R.id.button2);
         markerName = (EditText) dialog.findViewById(R.id.editText);
         refreshBtn = (ImageButton) dialog.findViewById(R.id.button3);
-        spinner = (Spinner) dialog.findViewById(R.id.spinner);
+        listView = (ListView) dialog.findViewById(R.id.listView);
 
         kaydetDialogBtn.setOnClickListener(this);
         silDialogBtn.setOnClickListener(this);
