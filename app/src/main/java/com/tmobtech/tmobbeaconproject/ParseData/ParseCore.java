@@ -1,28 +1,23 @@
-package ParseData;
+package com.tmobtech.tmobbeaconproject.ParseData;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.tmobtech.tmobbeaconproject.MainActivity;
 import com.tmobtech.tmobbeaconproject.PlaceBeaconActivity;
-
-import java.util.List;
 
 /**
  * Created by ozberkcetin on 24/07/15.
  */
 public class ParseCore {
     Activity activity;
+
 
     public  ParseCore (Activity activity)
     {
@@ -31,7 +26,7 @@ public class ParseCore {
 
 
 
-    public  static void registerUser(String userName,String passWord,String email) throws ParseException {
+    public   void registerUser(String userName,String passWord,String email) throws ParseException {
         ParseUser parseUser=new ParseUser();
         parseUser.setUsername(userName);
         parseUser.setPassword(passWord);
@@ -42,10 +37,17 @@ public class ParseCore {
             public void done(ParseException e) {
                 if (e!=null)
                 {
-                    Log.e("Success","Success");
+
+                    Toast.makeText(activity,e.getMessage(),Toast.LENGTH_LONG).show();
                 }
-                else
-                    Log.e("False","False");
+                else {
+                    Intent intent = new Intent(activity, MainActivity.class);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
+                }
+
+
             }
         });
 
@@ -55,7 +57,7 @@ public class ParseCore {
 
     public   void authenticateUser(String usr, String psw) throws ParseException {
 
-        final boolean[] isValiadate = new boolean[1];
+
         String username=usr.trim();
         String password=psw.trim();
         // Validate the log in data
@@ -87,12 +89,13 @@ public class ParseCore {
 
                     //isValiadate[0] =false;
 
-                      Toast.makeText(activity,"Invalid Login Parameters",Toast.LENGTH_LONG).show();
+                      Toast.makeText(activity,"Login Failed",Toast.LENGTH_LONG).show();
 
                 } else {
-                    Intent i=new Intent(activity,PlaceBeaconActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity(i);
+                    Intent intent=new Intent(activity,MainActivity.class);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
 
 
                 }

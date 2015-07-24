@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.ParseException;
+import com.tmobtech.tmobbeaconproject.R;
+
+import com.tmobtech.tmobbeaconproject.ParseData.ParseCore;
+
 /*
 * Created by Deniz Katipoglu
  * */
@@ -17,22 +22,29 @@ public class SignInActivity extends ActionBarActivity {
     private EditText userName, password;
     private Button signIn;
     private TextView signUp;
+    ParseCore parseCore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        userName = (EditText) findViewById(R.id.etUserName);
-        password = (EditText) findViewById(R.id.etPass);
-        signIn = (Button) findViewById(R.id.btnSingIn);
-        signUp = (TextView) findViewById(R.id.singUp);
+
+        initialize();
+
+
 
 
         //giriş button
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                try {
+                    parseCore.authenticateUser(userName.getText().toString(),password.getText().toString());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -46,6 +58,14 @@ public class SignInActivity extends ActionBarActivity {
             }
         });
 
+    }
+
+    private void initialize() {
+        userName = (EditText) findViewById(R.id.etUserName);
+        password = (EditText) findViewById(R.id.etPass);
+        signIn = (Button) findViewById(R.id.btnSingIn);
+        signUp = (TextView) findViewById(R.id.singUp);
+        parseCore=new ParseCore(SignInActivity.this);
     }
 
 
