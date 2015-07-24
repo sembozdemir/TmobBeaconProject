@@ -37,7 +37,7 @@ public class BeaconMap extends ParseObject {
 
     public void setName(String name) {
         this.name = name;
-    put(Constants.COLUMN_MAP_NAME,name);
+        put(Constants.COLUMN_MAP_NAME,name);
     }
 
     public String getImagePath() {

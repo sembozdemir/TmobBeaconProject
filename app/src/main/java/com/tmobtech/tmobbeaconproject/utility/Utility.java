@@ -5,15 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
-import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
 import com.tmobtech.tmobbeaconproject.entity.Place;
-import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,22 +137,5 @@ public class Utility {
             }
         }
         return allBeaconPowers;
-    }
-
-
-    public static  List<Beacon> getBeaconFromParse(String mapId)
-    {
-        final List<Beacon> beaconList=new ArrayList<>();
-        ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
-        query.whereEqualTo("objectId", mapId);
-        query.findInBackground(new FindCallback<Beacon>() {
-            @Override
-            public void done(List<Beacon> list, ParseException e) {
-                for (Beacon a : list) {
-                    beaconList.add(a);
-                }
-            }
-        });
-        return beaconList;
     }
 }
