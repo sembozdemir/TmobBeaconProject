@@ -1,6 +1,7 @@
 package ParseData;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,6 +13,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.tmobtech.tmobbeaconproject.MainActivity;
+import com.tmobtech.tmobbeaconproject.PlaceBeaconActivity;
 
 import java.util.List;
 
@@ -20,15 +23,15 @@ import java.util.List;
  */
 public class ParseCore {
     Activity activity;
-    public  ParseCore(Activity activity)
+
+    public  ParseCore (Activity activity)
     {
         this.activity=activity;
-        com.parse.Parse.enableLocalDatastore(activity);
-
-        com.parse.Parse.initialize(activity, "HXHT2n4P9lx1C4bZ6zPc0YBEcN0lDlMUM3ktpWaf", "M1dwVFvcLMa8uP9tNGtqFF8TZc8CJDfsrEecmnNh");
     }
 
-    public   void registerParse(String userName,String passWord,String email) throws ParseException {
+
+
+    public  static void registerUser(String userName,String passWord,String email) throws ParseException {
         ParseUser parseUser=new ParseUser();
         parseUser.setUsername(userName);
         parseUser.setPassword(passWord);
@@ -50,21 +53,55 @@ public class ParseCore {
     }
 
 
-    public void authenticateUser (String user,String password) throws ParseException {
-        ParseUser.logInInBackground(user, password, new LogInCallback() {
+    public   void authenticateUser(String usr, String psw) throws ParseException {
+
+        final boolean[] isValiadate = new boolean[1];
+        String username=usr.trim();
+        String password=psw.trim();
+        // Validate the log in data
+        boolean validationError = false;
+        StringBuilder validationErrorMessage = new StringBuilder("ErrorBuilder");
+        if (username.length() == 0) {
+            validationError = true;
+            validationErrorMessage.append("BlankUser");
+        }
+        if (password.length() == 0) {
+            if (validationError) {
+                validationErrorMessage.append("ErrorJoin");
+            }
+            validationError = true;
+            validationErrorMessage.append("BlankPassowrd");
+        }
+        validationErrorMessage.append("EndError");
+
+        // If there is a validation error, display the error
+        if (validationError) {
+            Log.e("ValidationError","ValidationError");
+            return ;
+        }
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
 
                 if (e != null) {
-                    // Show the error message
-                  Log.e("bos","bos");
+
+                    //isValiadate[0] =false;
+
+                      Toast.makeText(activity,"Invalid Login Parameters",Toast.LENGTH_LONG).show();
+
                 } else {
-                    Log.e("bosyyy","bosyy");
+                    Intent i=new Intent(activity,PlaceBeaconActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(i);
+
 
                 }
             }
         });
+
+
     }
+
 
 
 }

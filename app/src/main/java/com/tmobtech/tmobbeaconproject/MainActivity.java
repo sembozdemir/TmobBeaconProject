@@ -43,9 +43,11 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
+
             ParseCore parseCore=new ParseCore(MainActivity.this);
-           parseCore.authenticateUser("Ozberk","123456");
-            //parseCore.registerParse("Ozberk","123456","asdas@gmail.com");
+         parseCore.authenticateUser("Ozberk","123456");
+
+           // parseCore.registerParse("Ozberk","123456","asdas@gmail.com");
         } catch (ParseException e) {
             e.printStackTrace();
         }
