@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        UserGuideDialog userGuideDialog=new UserGuideDialog(MainActivity.this,"homePage");
 
         initViews();
         // Get Database Helper

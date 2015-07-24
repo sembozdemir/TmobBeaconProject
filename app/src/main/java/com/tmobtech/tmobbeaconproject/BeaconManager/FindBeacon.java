@@ -32,7 +32,9 @@ public class FindBeacon  implements BeaconConsumer {
    static private BeaconManager beaconManager;
     Activity activity;
     public static List<Beacon> ls;
+    private  static  FindBeacon findBeaconInstance;
 public  FindBeacon(Activity activity){
+
     this.activity=activity;
     beaconManager = BeaconManager.getInstanceForApplication(activity);
 
@@ -42,6 +44,16 @@ public  FindBeacon(Activity activity){
             setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
 
     beaconManager.bind(this);
+    }
+
+
+    public  static FindBeacon getInstance (Activity activity)
+    {
+        if (findBeaconInstance==null)
+        {
+            findBeaconInstance=new FindBeacon(activity);
+        }
+        return findBeaconInstance;
     }
 
     @Override

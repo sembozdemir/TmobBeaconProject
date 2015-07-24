@@ -1,11 +1,9 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
+import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
@@ -48,7 +47,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private FindBeacon findBeacon;
     static List<BeaconPower> beaconPowersListe;
     private PlaceMarkerView mClickedPlaceMarkerView;
-    private Button intentPrevButton;
 
 
     @Nullable
@@ -58,6 +56,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         View view = inflater.inflate(R.layout.setplacefragment, null);
 
 
+        UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setPlacePage");
         initViews(view);
         layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         myDbHelper = new MyDbHelper(getActivity());
@@ -67,19 +66,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         placeList = Utility.getPlaceList(getActivity(), parentActivity.getMapID());
         placeBeacons(beaconList);
         placePlaces(placeList);
-        findBeacon = new FindBeacon(getActivity());
-
-        intentPrevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                getActivity().getSupportFragmentManager().popBackStack();
-
-
-
-
-            }
-        });
+        findBeacon = FindBeacon.getInstance(getActivity());
 
         return view;
     }
@@ -146,7 +133,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     private void initViews(View view) {
         frameLayout = (FrameLayout) view.findViewById(R.id.framePlace);
         mapImageView = (ImageView) view.findViewById(R.id.imageViewPlace);
-        intentPrevButton = (Button) view.findViewById(R.id.button_prev);
     }
 
     @Override
