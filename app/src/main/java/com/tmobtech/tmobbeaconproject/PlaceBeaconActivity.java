@@ -48,6 +48,7 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
         buttonPrev.setOnClickListener(this);
         buttonNext.setOnClickListener(this);
         frameLayout = (FrameLayout) findViewById(R.id.framePlaceBeacon);
+
     }
 
 

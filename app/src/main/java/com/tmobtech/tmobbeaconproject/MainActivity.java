@@ -14,12 +14,15 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ParseData.ParseCore;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -39,6 +42,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            ParseCore parseCore=new ParseCore(MainActivity.this);
+           parseCore.authenticateUser("Ozberk","123456");
+            //parseCore.registerParse("Ozberk","123456","asdas@gmail.com");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         UserGuideDialog userGuideDialog=new UserGuideDialog(MainActivity.this,"homePage");
 
