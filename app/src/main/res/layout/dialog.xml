@@ -18,7 +18,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/textView"
             android:layout_weight="1"
-            android:padding="8dp"/>
+            android:padding="8dp" />
 
         <ImageButton
             android:id="@+id/button3"
@@ -28,12 +28,13 @@
             android:layout_toEndOf="@+id/button2"
             android:text="Refresh"
             android:layout_gravity="right"
-            android:background="@drawable/button_bg"
+            android:background="@drawable/ripple"
             android:layout_margin="4dp"
             android:padding="8dp"
-            android:src="@drawable/ic_refresh"/>
+            android:src="@drawable/ic_refresh"
+            />
 
-        </LinearLayout>
+    </LinearLayout>
 
 
     <TextView
@@ -65,8 +66,11 @@
             android:layout_below="@+id/spinner"
             android:text="Save"
             android:layout_weight="1"
-            android:background="@drawable/button_bg"
-            android:layout_margin="8dp"/>
+            android:background="@drawable/ripple"
+            android:layout_margin="8dp"
+            android:textColor="@color/button_labels"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"/>
 
         <Button
             android:id="@+id/button2"
@@ -77,8 +81,11 @@
             android:layout_toEndOf="@+id/button"
             android:text="Delete"
             android:layout_weight="1"
-            android:background="@drawable/button_bg"
-            android:layout_margin="8dp"/>
+            android:background="@drawable/ripple"
+            android:layout_margin="8dp"
+            android:textColor="@color/button_labels"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"/>
 
 
     </LinearLayout>
