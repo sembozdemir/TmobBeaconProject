@@ -10,13 +10,7 @@
 
     android:background="#ffffff">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign in"
-        android:textSize="35dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView2" />
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -59,7 +53,7 @@
 
 
     <TextView
-        android:id="@+id/singIn"
+        android:id="@+id/singUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
