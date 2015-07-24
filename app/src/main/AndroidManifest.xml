@@ -49,6 +49,14 @@
             android:name=".BeaconManager.FindBeacon"
             android:label="@string/title_activity_find_beacon" >
         </activity>
+        <activity
+            android:name=".SignInActivity"
+            android:label="@string/title_activity_sign_in" >
+        </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up" >
+        </activity>
     </application>
 
 </manifest>

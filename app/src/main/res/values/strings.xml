@@ -7,6 +7,8 @@
     <string name="title_activity_place_beacon">PlaceBeaconActivity</string>
     <string name="title_activity_measure_beacon_power">MeasureBeaconPowerActivity</string>
     <string name="title_activity_find_beacon">FindBeacon</string>
+    <string name="title_activity_sign_in">SignIn</string>
+    <string name="title_activity_sign_up">SignUp</string>
 
 <!-- TODO: Remove or change this placeholder text -->
 
