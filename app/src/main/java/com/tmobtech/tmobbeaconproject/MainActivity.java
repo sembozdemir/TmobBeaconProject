@@ -14,15 +14,13 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
+import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.tmobtech.tmobbeaconproject.ParseData.ParseCore;
 
 
 public class MainActivity extends ActionBarActivity {

@@ -26,11 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
+import com.tmobtech.tmobbeaconproject.utility.FindBeacon;
+import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
-import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
+import com.tmobtech.tmobbeaconproject.customviews.BeaconMarkerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.setbeaconfragment, null);
+        View view = inflater.inflate(R.layout.fragment_set_beacon, null);
 
         frameLayout=(FrameLayout) view.findViewById(R.id.frameBeacon);
 
@@ -200,8 +201,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 }
 
                 list = findBeacon.ls;
-                com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
-                listView.setAdapter(spinnerAdapter);
+                BeaconDialogListAdapter beaconDialogListAdapter = new BeaconDialogListAdapter(getActivity(), list);
+                listView.setAdapter(beaconDialogListAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

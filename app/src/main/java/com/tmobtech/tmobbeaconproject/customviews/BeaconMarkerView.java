@@ -1,10 +1,10 @@
-package com.tmobtech.tmobbeaconproject.views;
+package com.tmobtech.tmobbeaconproject.customviews;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.tmobtech.tmobbeaconproject.Beacon;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
 import com.tmobtech.tmobbeaconproject.R;
 
 /**

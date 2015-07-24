@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 import java.util.ArrayList;
 

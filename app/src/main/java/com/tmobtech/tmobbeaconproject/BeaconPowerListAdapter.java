@@ -9,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+
 import java.util.List;
 
 /**

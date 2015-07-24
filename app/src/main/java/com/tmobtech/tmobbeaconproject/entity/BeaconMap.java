@@ -1,8 +1,12 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.entity;
+
+import com.parse.ParseClassName;
 
 /**
  * Created by semih on 13.07.2015.
  */
+
+@ParseClassName("BeaconMap")
 public class BeaconMap {
     private long id;
     private String name;

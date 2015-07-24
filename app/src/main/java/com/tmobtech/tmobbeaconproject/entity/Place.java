@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.entity;
 
 import java.util.List;
 
