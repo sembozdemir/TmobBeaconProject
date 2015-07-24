@@ -284,7 +284,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                                     update(beaconMarkerView);
 
 
-                                    dialog.cancel();
+                                   // dialog.cancel();
 
                                 }
                             });
@@ -377,34 +377,44 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     private void update(BeaconMarkerView v) {
         boolean isAdded = false;
         final List<Beacon> listFromDb = Utility.getBeaconList(mapId, getActivity());
-        for (int i = 0; i < listFromDb.size(); i++) {
-            if (v.getBeacon().getMacAddress().equals(listFromDb.get(i).getMacAddress())) {
-                isAdded = true;
+        if (!v.getBeacon().getMacAddress().equals(selectedBeacon.getText())) {
+            for (int i = 0; i < listFromDb.size(); i++) {
+                if (selectedBeacon.getText().equals(listFromDb.get(i).getMacAddress())) {
+                    isAdded = true;
+                }
             }
+
+            if (!isAdded) {
+                try {
+                    v.getBeacon().setBeaconName(markerName.getText().toString());
+                } catch (Exception e) {
+
+                }
+                try {
+                    v.getBeacon().setMacAddress(list.get(listPosition).getBluetoothAddress());
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
+                    myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
+
+                } catch (Exception e) {
+
+                }
+
+                dialog.cancel();
+            } else
+                Toast.makeText(getActivity(), "Mac Adress must be Unique", Toast.LENGTH_LONG).show();
         }
-
-        if (!isAdded) {
-            try {
-                v.getBeacon().setBeaconName(markerName.getText().toString());
-            } catch (Exception e) {
-
-            }
-            try {
-                v.getBeacon().setMacAddress(list.get(listPosition).getBluetoothAddress());
-            } catch (Exception e) {
-
-            }
-
-            try {
-                myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
-                myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
-            } catch (Exception e) {
-
-            }
-
+        else
+        {
+            v.getBeacon().setBeaconName(markerName.getText().toString());
+            myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
             dialog.cancel();
+
         }
-        else Toast.makeText(getActivity(),"Mac Adress must be Unique",Toast.LENGTH_LONG).show();
 
     }
 
