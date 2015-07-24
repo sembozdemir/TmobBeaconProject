@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Next"
             android:textColor="@color/button_labels"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:id="@+id/button_next"
             android:textStyle="bold"
             android:fontFamily="sans-serif"/>

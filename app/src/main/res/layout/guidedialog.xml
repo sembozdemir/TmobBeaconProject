@@ -30,7 +30,7 @@
         android:text="Okey I&apos;ve Got It"
         android:id="@+id/button5"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/ripple"
+        android:background="@drawable/button"
         android:textColor="@color/button_labels"
         android:textStyle="bold"
         android:fontFamily="sans-serif"/>

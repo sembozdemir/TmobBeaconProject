@@ -26,7 +26,7 @@
             android:text="Prev"
             android:id="@+id/buttonPrev"
             android:layout_weight="1"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:textColor="@color/button_labels"
             android:textStyle="bold"
             android:fontFamily="sans-serif"/>
@@ -37,7 +37,7 @@
             android:text="Next"
             android:id="@+id/buttonNext"
             android:layout_weight="1"
-            android:background="@drawable/ripple"
+            android:background="@drawable/button"
             android:textColor="@color/button_labels"
             android:textStyle="bold"
             android:fontFamily="sans-serif"/>
