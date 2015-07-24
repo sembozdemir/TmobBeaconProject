@@ -13,8 +13,15 @@ public class Beacon extends ParseObject {
     private String macAddress;
     private float apsis;
     private float ordinat;
-    private  long mapId;
+    private  String mapId;
 
+    public String getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(String mapId) {
+        this.mapId = mapId;
+    }
 
     public Beacon() {
     }

@@ -1,13 +1,15 @@
 package com.tmobtech.tmobbeaconproject.entity;
 
 import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 
 /**
  * Created by semih on 13.07.2015.
  */
 
 @ParseClassName("BeaconMap")
-public class BeaconMap {
+public class BeaconMap extends ParseObject {
     private long id;
     private String name;
     private String imagePath;
@@ -27,13 +29,7 @@ public class BeaconMap {
 
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -41,6 +37,7 @@ public class BeaconMap {
 
     public void setName(String name) {
         this.name = name;
+    put(Constants.COLUMN_MAP_NAME,name);
     }
 
     public String getImagePath() {
@@ -48,6 +45,8 @@ public class BeaconMap {
     }
 
     public void setImagePath(String imagePath) {
+
         this.imagePath = imagePath;
+        put(Constants.COLUMN_MAP_IMAGE_PATH,imagePath);
     }
 }

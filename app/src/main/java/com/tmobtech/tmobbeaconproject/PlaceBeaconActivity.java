@@ -19,7 +19,7 @@ import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
  * Created by Ozberk on 15.7.2015.
  */
 public class PlaceBeaconActivity extends ActionBarActivity implements View.OnClickListener {
-    static long mapID;
+    static String mapID;
     MyDbHelper myDbHelper;
     Cursor cursor;
     static String imagePath;
@@ -58,12 +58,12 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
 
     private void initialize() {
         myDbHelper = new MyDbHelper(PlaceBeaconActivity.this);
-        mapID = getIntent().getLongExtra("mapId", 0);
+        mapID = getIntent().getStringExtra("mapId");
         getImageMap();
     }
 
     private void getImageMap() {
-        cursor = myDbHelper.getMapFromId(mapID);
+       // cursor = myDbHelper.getMapFromId(mapID); TODO Degisicicek
         if (cursor.moveToFirst())
             do {
                 imagePath = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
@@ -76,7 +76,7 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
         return imagePath;
     }
 
-    public long getMapID() {
+    public String getMapID() {
         return mapID;
     }
 
@@ -118,7 +118,7 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
 
         switch (id) {
             case R.id.action_edit:
-                editMap(mapID);
+               // editMap(mapID); TODO DEGISICEK
                 break;
         }
 

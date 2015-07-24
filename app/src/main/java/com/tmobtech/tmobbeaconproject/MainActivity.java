@@ -14,7 +14,11 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
@@ -31,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private FloatingActionButton mFabCamera;
     private FloatingActionButton mFabGallery;
     private GridView mGridView;
-    private MyDbHelper mDbHelper;
+
     private List<ParseObject> todos;
     private MyGridAdapter myGridAdapter;
 
@@ -46,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
 
         initViews();
         // Get Database Helper
-        mDbHelper = new MyDbHelper(this);
+
 
         // set OnClickListener for Floating Action Button
         mFabCamera.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +125,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateGridContent() {
-        ArrayList<BeaconMap> beaconMaps = getBeaconMapsArray();
+        List<BeaconMap> beaconMaps = getBeaconMapsArray();
         myGridAdapter = new MyGridAdapter(this, beaconMaps);
 
         mGridView.setAdapter(myGridAdapter);
@@ -139,35 +143,34 @@ public class MainActivity extends ActionBarActivity {
     public void deleteMap(int position) {
 
         BeaconMap beaconMap = (BeaconMap) mGridView.getItemAtPosition(position);
-        mDbHelper.deleteMap(beaconMap.getId());
+
+        beaconMap.deleteInBackground();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mDbHelper.close();
+
     }
 
-    private ArrayList<BeaconMap> getBeaconMapsArray() {
-        ArrayList<BeaconMap> beaconMapArrayList = new ArrayList<BeaconMap>();
-        Cursor cursor = mDbHelper.getMaps();
-        if (cursor.moveToFirst()) {
-            do {
-                BeaconMap beaconMap = new BeaconMap(
-                        cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_ID)),
-                        cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_NAME)),
-                        cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH)));
-                beaconMapArrayList.add(beaconMap);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        return beaconMapArrayList;
+    private List<BeaconMap> getBeaconMapsArray() {
+        final List<BeaconMap> beaconMaps=new ArrayList<>();
+        ParseQuery<BeaconMap> query = ParseQuery.getQuery(BeaconMap.class);
+        query.whereEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
+        query.findInBackground(new FindCallback<BeaconMap>() {
+            @Override
+            public void done(List<BeaconMap> results, ParseException e) {
+                for (BeaconMap a : results) {
+                  beaconMaps.add(a);
+                }
+            }
+        });
+        return beaconMaps;
     }
 
     private void onMapSelected(BeaconMap beaconMap) {
         Intent placeBeaconIntent = new Intent(MainActivity.this, PlaceBeaconActivity.class);
-        placeBeaconIntent.putExtra("mapId", beaconMap.getId());
+        placeBeaconIntent.putExtra("mapId", beaconMap.getObjectId());
         startActivity(placeBeaconIntent);
 
     }

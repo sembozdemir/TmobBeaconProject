@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.parse.ParseObject;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 
 /**
