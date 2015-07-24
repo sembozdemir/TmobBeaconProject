@@ -63,13 +63,11 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
     }
 
     private void getImageMap() {
-       // cursor = myDbHelper.getMapFromId(mapID); TODO Degisicicek
-        if (cursor.moveToFirst())
-            do {
-                imagePath = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_IMAGE_PATH));
-            }
-            while (cursor.moveToNext());
-        cursor.close();
+
+
+        imagePath=getIntent().getStringExtra("imagePath");
+
+
     }
 
     public String getImagePath() {
