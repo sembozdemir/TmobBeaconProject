@@ -43,8 +43,10 @@
             android:layout_height="wrap_content"
             android:text="Next"
             android:textColor="@color/button_labels"
-            android:background="@color/button_normal"
-            android:id="@+id/button_next" />
+            android:background="@drawable/ripple"
+            android:id="@+id/button_next"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"/>
 
 
     </LinearLayout>
