@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
@@ -243,21 +241,28 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         } else {
             mBeaconMap.setName(mEditText.getText().toString());
             save();
-            Intent intent = new Intent(this, PlaceBeaconActivity.class);
-            intent.putExtra("mapId", mBeaconMap.getObjectId());
 
-            startActivity(intent);
-            finish();
         }
     }
 
-    private void save()  {
-        try {
-            mBeaconMap.save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e("getObjectId", mBeaconMap.getObjectId() + "");
+    private void save() {
+        mBeaconMap.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    goToPlaceBeaconActivity();
+                } else {
+                    // TODO: show Toast
+                }
+            }
 
+        });
+    }
+    private void goToPlaceBeaconActivity() {
+        Intent intent = new Intent(this, PlaceBeaconActivity.class);
+        intent.putExtra("mapId", mBeaconMap.getObjectId());
+        intent.putExtra("imagePath", mBeaconMap.getImagePath());
+        startActivity(intent);
+        finish();
     }
 }
