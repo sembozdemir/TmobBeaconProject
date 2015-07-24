@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
+import com.tmobtech.tmobbeaconproject.ParseData.ParseCore;
 import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
@@ -251,15 +252,14 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
                     beaconMarkerView.setX(x - 64);
                     beaconMarkerView.setY(y - 64);
+                    beacon.setApsis(x - 64);
+                    beacon.setOrdinat(y - 64);
 
                     mapId = placeBeaconActivity.getMapID();
 
 
-                    beacon.setId(myDbHelper.insertBeacon(markerName.getText().toString(),
-                            beacon.getMacAddress(),
-                            beaconMarkerView.getX(),
-                            beaconMarkerView.getY(),
-                            mapId));
+                    ParseCore.registerBeacon(beacon);
+                    Log.e("Username",User.userName);
 
 
                     frameLayout.addView(beaconMarkerView, layoutParams1);

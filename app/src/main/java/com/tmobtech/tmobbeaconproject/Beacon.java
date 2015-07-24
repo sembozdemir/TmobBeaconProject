@@ -13,6 +13,8 @@ public class Beacon extends ParseObject {
     private String macAddress;
     private float apsis;
     private float ordinat;
+    private  long mapId;
+
 
     public Beacon(String beaconName, String macAddress, float apsis, float ordinat) {
         this.beaconName = beaconName;
