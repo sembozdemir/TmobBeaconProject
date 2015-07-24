@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject.ParseData;
+package com.tmobtech.tmobbeaconproject.utility;
 
 import android.app.Activity;
 import android.content.Intent;

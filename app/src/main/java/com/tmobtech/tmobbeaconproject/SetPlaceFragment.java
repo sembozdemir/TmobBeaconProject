@@ -18,12 +18,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
+import com.tmobtech.tmobbeaconproject.utility.FindBeacon;
+import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.Place;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
-import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
-import com.tmobtech.tmobbeaconproject.views.PlaceMarkerView;
+import com.tmobtech.tmobbeaconproject.customviews.BeaconMarkerView;
+import com.tmobtech.tmobbeaconproject.customviews.PlaceMarkerView;
 
 import java.util.List;
 
@@ -53,7 +56,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.setplacefragment, null);
+        View view = inflater.inflate(R.layout.fragment_set_place, null);
 
         UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setPlacePage");
         initViews(view);

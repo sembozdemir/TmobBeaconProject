@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.entity;
 
 /**
  * Created by semih on 21.07.2015.

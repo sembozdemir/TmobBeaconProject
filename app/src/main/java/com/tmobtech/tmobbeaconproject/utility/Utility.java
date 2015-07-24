@@ -5,10 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.tmobtech.tmobbeaconproject.Beacon;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.BeaconPower;
-import com.tmobtech.tmobbeaconproject.Place;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.Place;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;

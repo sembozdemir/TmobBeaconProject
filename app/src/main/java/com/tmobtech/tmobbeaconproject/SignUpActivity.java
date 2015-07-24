@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject.Login;
+package com.tmobtech.tmobbeaconproject;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,8 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.ParseException;
-import com.tmobtech.tmobbeaconproject.ParseData.ParseCore;
-import com.tmobtech.tmobbeaconproject.R;
+import com.tmobtech.tmobbeaconproject.utility.ParseCore;
 
 
 /*

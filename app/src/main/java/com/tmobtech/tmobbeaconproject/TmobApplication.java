@@ -3,6 +3,7 @@ package com.tmobtech.tmobbeaconproject;
 import android.app.Application;
 
 import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
 
 
 /**

@@ -262,6 +262,17 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 selectionArgs, null, null, null, null);
     }
 
+    public int updateMapName(long mapId, String newMapName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = COLUMN_MAP_ID + " = ?";
+        String[] whereArgs = new String[]{
+                "" + mapId
+        };
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_MAP_NAME, newMapName);
+        return db.update(TABLE_MAPS_NAME, values, whereClause, whereArgs);
+    }
+
     public int updateBeaconName(long beaconId, String newBeaconName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_ID + " = ?";

@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
