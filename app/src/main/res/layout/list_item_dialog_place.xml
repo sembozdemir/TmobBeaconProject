@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="FF:FF:FF:FF:FF:FF"
-            android:id="@+id/textView_mac_address"
+            android:text="Beacon 1"
+            android:id="@+id/textView_beacon_name"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp" />
 

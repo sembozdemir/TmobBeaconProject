@@ -55,7 +55,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
         View view = inflater.inflate(R.layout.setplacefragment, null);
 
-
         UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setPlacePage");
         initViews(view);
         layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -69,6 +68,12 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         findBeacon = FindBeacon.getInstance(getActivity());
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        findBeacon.stopBeaconBindService();
     }
 
     private void placePlaces(List<Place> placeList) {
@@ -95,12 +100,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         } catch (Exception e) {
             Log.e(LOG_TAG, "placePlaces Error: " + e.toString());
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        findBeacon.stopBeaconBindService();
     }
 
     private void placeBeacons(List<Beacon> beaconList) {

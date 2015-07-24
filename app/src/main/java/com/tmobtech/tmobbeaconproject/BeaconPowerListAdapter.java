@@ -18,7 +18,7 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
 
     // View lookup cache
     private static class ViewHolder {
-        TextView textViewMacAddress;
+        TextView textViewName;
         TextView textViewDistance;
         CheckBox checkBoxIsAdded;
     }
@@ -37,7 +37,7 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_item_dialog_place, parent, false);
-            viewHolder.textViewMacAddress = (TextView) convertView.findViewById(R.id.textView_mac_address);
+            viewHolder.textViewName = (TextView) convertView.findViewById(R.id.textView_beacon_name);
             viewHolder.textViewDistance = (TextView) convertView.findViewById(R.id.textView_distance);
             viewHolder.checkBoxIsAdded = (CheckBox) convertView.findViewById(R.id.checkBox_list_item);
             convertView.setTag(viewHolder);
@@ -45,7 +45,7 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.textViewMacAddress.setText(beaconPower.getBeacon().getMacAddress());
+        viewHolder.textViewName.setText(beaconPower.getBeacon().getBeaconName());
         viewHolder.textViewDistance.setText("" + beaconPower.getDistance());
         viewHolder.checkBoxIsAdded.setChecked(beaconPower.isAdded());
 
