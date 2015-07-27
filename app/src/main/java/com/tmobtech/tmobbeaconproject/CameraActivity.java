@@ -245,22 +245,30 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             mBeaconMap.setName(mEditText.getText().toString());
             mBeaconMap.setUserId(ParseUser.getCurrentUser().getObjectId());
             save();
-            Intent intent = new Intent(this, PlaceBeaconActivity.class);
-            intent.putExtra("mapId", mBeaconMap.getObjectId());
-            intent.putExtra("imagePath",mBeaconMap.get("img_path").toString());
+           
 
-            startActivity(intent);
-            finish();
+          
         }
     }
 
-    private void save()  {
-        try {
-            mBeaconMap.save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.e("getObjectId", mBeaconMap.getObjectId() + "");
+    private void save() {
+        mBeaconMap.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    goToPlaceBeaconActivity();
+                } else {
+                    // TODO: show Toast
+                }
+            }
 
+        });
+    }
+    private void goToPlaceBeaconActivity() {
+        Intent intent = new Intent(this, PlaceBeaconActivity.class);
+        intent.putExtra("mapId", mBeaconMap.getObjectId());
+        intent.putExtra("imagePath", mBeaconMap.getImagePath());
+        startActivity(intent);
+        finish();
     }
 }
