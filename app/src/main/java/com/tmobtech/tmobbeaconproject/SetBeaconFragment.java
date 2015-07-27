@@ -246,7 +246,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (markerName.getText().toString().trim().length() > 0) {
 
-                /*Todo degisecek
+
                 final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
                 for (int i = 0; i < listFromDb.size(); i++) {
                     if (((org.altbeacon.beacon.Beacon)list.get(listPosition)).getBluetoothAddress().equals(listFromDb.get(i).getMacAddress())) {
@@ -254,7 +254,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     }
                 }
 
-*/
+
                 if (!isAdded) {
                     beacon.setBeaconName(markerName.getText().toString());
 
@@ -392,11 +392,9 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     private void update(final BeaconMarkerView v) {
         boolean macAdressIsUnique = true;
 
-        try {
+
             listBeacon = Utility.getBeaconFromParse(mapId);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         if (!v.getBeacon().getMacAddress().equals(selectedBeacon.getText())) {
             for (int i = 0; i < listBeacon.size(); i++) {
                 if (selectedBeacon.getText().equals(listBeacon.get(i).getMacAddress())) {

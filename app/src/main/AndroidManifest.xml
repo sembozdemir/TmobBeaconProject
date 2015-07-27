@@ -42,13 +42,10 @@
         <activity
             android:name=".PlaceBeaconActivity"
             android:label="@string/title_activity_place_beacon" />
-        <activity
-            android:name=".utility.FindBeacon"
-            android:label="@string/title_activity_find_beacon" >
-        </activity>
+
         <activity
 
-            android:name=".Login.SignInActivity"
+            android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -58,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login.SignUpActivity"
+            android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:windowSoftInputMode="adjustResize">
         </activity>

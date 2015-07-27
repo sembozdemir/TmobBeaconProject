@@ -65,8 +65,8 @@ public class Utility {
 
     }
 
-    public static List<BeaconPower> getBeaconPowers(FindBeacon findBeacon,long mapID,Activity activity) {
-        List<Beacon> list = getBeaconList(mapID, activity);
+    public static List<BeaconPower> getBeaconPowers(FindBeacon findBeacon,List<Beacon> list,Activity activity) {
+
         List<org.altbeacon.beacon.Beacon> ls = findBeacon.ls;
         List<BeaconPower> beaconPowerList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -127,7 +127,7 @@ public class Utility {
         cursor.close();
         return beacon;
     }
-
+/*
     public static List<BeaconPower> getCheckedBeaconPowers(List<BeaconPower> beaconPowerList, FindBeacon findBeacon, long mapId, Activity context) {
         List<BeaconPower> allBeaconPowers = getBeaconPowers(findBeacon, mapId, context);
         for (int i=0;i<beaconPowerList.size();i++)
@@ -144,15 +144,21 @@ public class Utility {
         }
         return allBeaconPowers;
     }
+*/
 
+    public static  List<Beacon> getBeaconFromParse(String mapId) {
+        List<Beacon> beaconList=null;
+        try {
+            ;
+            ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
+            query.whereEqualTo("beacons_map_id", mapId);
+            beaconList=query.find();
+           return  beaconList;
+        } catch (ParseException e) {
+           Log.e(TAG,e.toString());
 
-    public static  List<Beacon> getBeaconFromParse(String mapId) throws ParseException {
-        final List<Beacon> beaconList;
-        ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
-        query=new ParseQuery<Beacon>("Beacon");
-        query.whereEqualTo("beacons_map_id", mapId);
-        beaconList=query.find();
-        return beaconList;
+        }
+        return null;
     }
 
 

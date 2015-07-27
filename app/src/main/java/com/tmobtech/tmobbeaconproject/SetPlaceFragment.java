@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.utility.FindBeacon;
 import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
@@ -60,12 +61,12 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
         UserGuideDialog userGuideDialog=new UserGuideDialog(getActivity(),"setPlacePage");
         initViews(view);
+
         layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         myDbHelper = new MyDbHelper(getActivity());
         parentActivity = (PlaceBeaconActivity) getActivity();
+        beaconList=Utility.getBeaconFromParse(parentActivity.getMapID());
         setImageView(parentActivity.getImagePath());
-        //todo degisecek beaconList = Utility.getBeaconList(parentActivity.getMapID(), getActivity());
-    //todo degisecek    placeList = Utility.getPlaceList(getActivity(), parentActivity.getMapID());
         placeBeacons(beaconList);
         placePlaces(placeList);
         findBeacon = FindBeacon.getInstance(getActivity());
@@ -193,11 +194,8 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
             dialog.setTitle("New Place"); // it will be new place dialog
             updateDialogButton.setVisibility(View.GONE);
             delDialogButton.setVisibility(View.GONE);
-          //todo degisecek  beaconPowersListe=Utility.getBeaconPowers(findBeacon,parentActivity.getMapID(),getActivity());
-//            beaconPowersListe= Utility.getBeaconPowersFromDb(getActivity(),place.getPlaceId());
-//            beaconPowersListe=Utility.getCheckedBeaconPowers(beaconPowersListe, findBeacon, parentActivity.getMapID(), getActivity());
-            beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),
-                    beaconPowersListe);
+            beaconPowersListe=Utility.getBeaconPowers(findBeacon,beaconList,getActivity());
+            beaconPowerListAdapter = new BeaconPowerListAdapter(getActivity(),beaconPowersListe);
             beaconPowerListView.setAdapter(beaconPowerListAdapter);
 
 /*  //todo degisecek
