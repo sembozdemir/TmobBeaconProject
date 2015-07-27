@@ -49,7 +49,8 @@
         <activity
 
             android:name=".Login.SignInActivity"
-            android:label="@string/title_activity_sign_in" >
+            android:label="@string/title_activity_sign_in"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +59,8 @@
         </activity>
         <activity
             android:name=".Login.SignUpActivity"
-            android:label="@string/title_activity_sign_up" >
+            android:label="@string/title_activity_sign_up"
+            android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 
