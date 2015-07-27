@@ -1,9 +1,14 @@
 package com.tmobtech.tmobbeaconproject.entity;
 
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
+
 /**
  * Created by semih on 21.07.2015.
  */
-public class BeaconPower {
+@ParseClassName("BeaconPower")
+public class BeaconPower extends ParseObject {
     private Beacon beacon;
     private double distance;
     private boolean isAdded;
@@ -18,19 +23,21 @@ public class BeaconPower {
     }
 
     public Beacon getBeacon() {
-        return beacon;
+        return (Beacon) get(Constants.COLUMN_BEACON_MEASURE_BEACON_ID);
     }
 
     public void setBeacon(Beacon beacon) {
         this.beacon = beacon;
+        put(Constants.COLUMN_BEACON_MEASURE_BEACON_ID, beacon.getObjectId());
     }
 
     public double getDistance() {
-        return distance;
+        return getDouble(Constants.COLUMN_BEACON_MEASURE_POWER);
     }
 
     public void setDistance(float distance) {
         this.distance = distance;
+        put(Constants.COLUMN_BEACON_MEASURE_POWER, distance);
     }
 
     public boolean isAdded() {

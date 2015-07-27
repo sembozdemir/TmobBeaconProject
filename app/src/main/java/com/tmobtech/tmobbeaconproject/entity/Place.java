@@ -2,6 +2,7 @@ package com.tmobtech.tmobbeaconproject.entity;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Place extends ParseObject {
     private String placeName;
     private float apsis;
     private float ordinat;
+    private String mapId;
     private List<BeaconPower> beaconPowerList;
 
     public Place(long placeId, String placeName, float apsis, float ordinat, List<BeaconPower> beaconPowerList) {
@@ -35,42 +37,47 @@ public class Place extends ParseObject {
         this.beaconPowerList = beaconPowerList;
     }
 
-    public long getPlaceId() {
-        return placeId;
-    }
-
-    public void setPlaceId(long placeId) {
-        this.placeId = placeId;
-    }
-
     public String getPlaceName() {
-        return placeName;
+        return getString(Constants.COLUMN_PLACE_NAME);
     }
 
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
+        put(Constants.COLUMN_PLACE_NAME, placeName);
     }
 
     public float getApsis() {
-        return apsis;
+        return (float) getDouble(Constants.COLUMN_PLACE_APSIS);
     }
 
     public void setApsis(float apsis) {
         this.apsis = apsis;
+        put(Constants.COLUMN_PLACE_APSIS, apsis);
     }
 
     public float getOrdinat() {
-        return ordinat;
+        return (float) getDouble(Constants.COLUMN_PLACE_ORDINAT);
     }
 
     public void setOrdinat(float ordinat) {
         this.ordinat = ordinat;
+        put(Constants.COLUMN_PLACE_ORDINAT, ordinat);
     }
 
+    public String getMapId() {
+        return getString(Constants.COLUMN_PLACE_MAP_ID);
+    }
+
+    public void setMapId(String mapId) {
+        put(Constants.COLUMN_PLACE_MAP_ID, mapId);
+    }
+
+    // Todo degisecek veya silinecek
     public List<BeaconPower> getBeaconPowerList() {
         return beaconPowerList;
     }
 
+    // Todo degisecek veya silinecek
     public void setBeaconPowerList(List<BeaconPower> beaconPowerList) {
         this.beaconPowerList = beaconPowerList;
     }
