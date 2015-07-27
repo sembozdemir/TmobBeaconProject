@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
-import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,8 +43,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     private ImageView mImgPreview;
     private EditText mEditText;
-
-    private MyDbHelper mDbHelper;
     private BeaconMap mBeaconMap;
 
     @Override
@@ -53,7 +53,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         initViews();
 
         String action = getIntent().getStringExtra(Intent.EXTRA_TEXT);
-        mDbHelper = new MyDbHelper(this);
         mBeaconMap = new BeaconMap();
 
         // if action is camera
@@ -78,13 +77,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         mEditText = (EditText) findViewById(R.id.editText);
         Button mNextButton = (Button) findViewById(R.id.button_next);
         mNextButton.setOnClickListener(this);
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mDbHelper.close();
     }
 
     /**
@@ -248,16 +240,29 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "Please give a name for your map", Toast.LENGTH_LONG).show();
         } else {
             mBeaconMap.setName(mEditText.getText().toString());
-            addToDatabase();
-            Intent intent = new Intent(this, PlaceBeaconActivity.class);
-            intent.putExtra("mapId", mBeaconMap.getId());
-            startActivity(intent);
-            finish();
+            save();
+
         }
     }
 
-    private void addToDatabase() {
-        long mapId = mDbHelper.insertMap(mBeaconMap.getName(), mBeaconMap.getImagePath());
-        mBeaconMap.setId(mapId);
+    private void save() {
+        mBeaconMap.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    goToPlaceBeaconActivity();
+                } else {
+                    // TODO: show Toast
+                }
+            }
+
+        });
+    }
+    private void goToPlaceBeaconActivity() {
+        Intent intent = new Intent(this, PlaceBeaconActivity.class);
+        intent.putExtra("mapId", mBeaconMap.getObjectId());
+        intent.putExtra("imagePath", mBeaconMap.getImagePath());
+        startActivity(intent);
+        finish();
     }
 }

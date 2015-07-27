@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by semih on 13.07.2015.
@@ -19,9 +21,9 @@ import java.util.ArrayList;
 public class MyGridAdapter extends BaseAdapter {
     private static final String LOG_TAG = MyGridAdapter.class.getSimpleName();
     private Context mContext;
-    private final ArrayList<BeaconMap> beaconMaps;
+    private final List<BeaconMap> beaconMaps;
 
-    public MyGridAdapter(Context context, ArrayList<BeaconMap> beaconMaps) {
+    public MyGridAdapter(Context context, List<BeaconMap> beaconMaps) {
         mContext = context;
         this.beaconMaps = beaconMaps;
     }

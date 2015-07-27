@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject.ParseData;
+package com.tmobtech.tmobbeaconproject.utility;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,8 +9,11 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
 import com.tmobtech.tmobbeaconproject.MainActivity;
 import com.tmobtech.tmobbeaconproject.PlaceBeaconActivity;
+import com.tmobtech.tmobbeaconproject.User;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
 
 /**
  * Created by ozberkcetin on 24/07/15.
@@ -58,7 +61,7 @@ public class ParseCore {
     public   void authenticateUser(String usr, String psw) throws ParseException {
 
 
-        String username=usr.trim();
+        final String username=usr.trim();
         String password=psw.trim();
         // Validate the log in data
         boolean validationError = false;
@@ -89,10 +92,11 @@ public class ParseCore {
 
                     //isValiadate[0] =false;
 
-                      Toast.makeText(activity,"Login Failed",Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show();
 
                 } else {
-                    Intent intent=new Intent(activity,MainActivity.class);
+                    User.userName=username;
+                    Intent intent = new Intent(activity, MainActivity.class);
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.startActivity(intent);
@@ -102,6 +106,12 @@ public class ParseCore {
             }
         });
 
+
+    }
+
+
+    public  static void  registerBeacon (Beacon beacon) throws ParseException {
+        beacon.save();
 
     }
 

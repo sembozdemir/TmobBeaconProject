@@ -1,11 +1,15 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.entity;
+
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
 
 import java.util.List;
 
 /**
  * Created by semih on 21.07.2015.
  */
-public class Place {
+@ParseClassName("Place")
+public class Place extends ParseObject {
 
     private long placeId;
     private String placeName;

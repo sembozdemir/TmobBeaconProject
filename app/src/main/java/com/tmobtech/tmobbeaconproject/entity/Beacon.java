@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject;
+package com.tmobtech.tmobbeaconproject.entity;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -13,15 +13,24 @@ public class Beacon extends ParseObject {
     private String macAddress;
     private float apsis;
     private float ordinat;
+    private  String mapId;
+
+    public String getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(String mapId) {
+        this.mapId = mapId;
+    }
+
+    public Beacon() {
+    }
 
     public Beacon(String beaconName, String macAddress, float apsis, float ordinat) {
         this.beaconName = beaconName;
         this.macAddress = macAddress;
         this.apsis = apsis;
         this.ordinat = ordinat;
-    }
-
-    public Beacon() {
     }
 
     public Beacon(long id) {

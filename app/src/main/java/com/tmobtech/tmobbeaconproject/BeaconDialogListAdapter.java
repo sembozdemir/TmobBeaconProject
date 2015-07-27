@@ -15,13 +15,13 @@ import java.util.List;
 /**
  * Created by ozberkcetin on 20/07/15.
  */
-public class SpinnerAdapter extends BaseAdapter {
+public class BeaconDialogListAdapter extends BaseAdapter {
 
     Activity activity;
     List<Beacon> list;
     LayoutInflater inflater;
 
-    public SpinnerAdapter (Activity activity,List<org.altbeacon.beacon.Beacon> list)
+    public BeaconDialogListAdapter(Activity activity, List<org.altbeacon.beacon.Beacon> list)
     {
         this.activity=activity;
         this.list=list;
@@ -47,9 +47,9 @@ public class SpinnerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view=inflater.inflate(R.layout.spinnerxml,null);
-        TextView beaconId=(TextView)view.findViewById(R.id.textView3);
-        TextView distance=(TextView)view.findViewById(R.id.textView4);
+        View view=inflater.inflate(R.layout.list_item_dialog_beacon,null);
+        TextView beaconId=(TextView)view.findViewById(R.id.textView_dialog_list_mac_addrs);
+        TextView distance=(TextView)view.findViewById(R.id.textView_dialog_list_distance);
         beaconId.setText(list.get(position).getBluetoothAddress());
         distance.setText(String.valueOf(list.get(position).getDistance()).substring(0,3)+"m");
         return  view;

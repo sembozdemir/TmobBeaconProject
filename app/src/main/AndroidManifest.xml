@@ -43,7 +43,7 @@
             android:name=".PlaceBeaconActivity"
             android:label="@string/title_activity_place_beacon" />
         <activity
-            android:name=".BeaconManager.FindBeacon"
+            android:name=".utility.FindBeacon"
             android:label="@string/title_activity_find_beacon" >
         </activity>
         <activity

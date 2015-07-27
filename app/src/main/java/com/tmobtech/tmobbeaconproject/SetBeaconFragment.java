@@ -26,11 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.UserGuide.UserGuideDialog;
+import com.tmobtech.tmobbeaconproject.customviews.BeaconMarkerView;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
+import com.tmobtech.tmobbeaconproject.utility.FindBeacon;
+import com.tmobtech.tmobbeaconproject.utility.ParseCore;
+import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
-import com.tmobtech.tmobbeaconproject.views.BeaconMarkerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     String imagePath;
     FrameLayout.LayoutParams layoutParams1;
     LayoutInflater inflater;
-    long mapId;
+    String mapId;
     PlaceBeaconActivity placeBeaconActivity;
     Button silDialogBtn;
     Dialog dialog;
@@ -73,7 +75,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.setbeaconfragment, null);
+        View view = inflater.inflate(R.layout.fragment_set_beacon, null);
 
         frameLayout=(FrameLayout) view.findViewById(R.id.frameBeacon);
 
@@ -86,7 +88,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         try {
             imagePath = placeBeaconActivity.getImagePath();
             mapId = placeBeaconActivity.getMapID();
-            listBeacon = Utility.getBeaconList(mapId, getActivity());
+         listBeacon =Utility.getBeaconFromParse(mapId);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -200,7 +202,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 }
 
                 list = findBeacon.ls;
-                com.tmobtech.tmobbeaconproject.SpinnerAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.SpinnerAdapter(getActivity(), list);
+                com.tmobtech.tmobbeaconproject.BeaconDialogListAdapter spinnerAdapter = new com.tmobtech.tmobbeaconproject.BeaconDialogListAdapter(getActivity(), list);
                 listView.setAdapter(spinnerAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -236,7 +238,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (markerName.getText().toString().trim().length() > 0) {
 
-                final List<Beacon> listFromDb = Utility.getBeaconList(mapId, getActivity());
+                final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
                 for (int i = 0; i < listFromDb.size(); i++) {
                     if (((org.altbeacon.beacon.Beacon)list.get(listPosition)).getBluetoothAddress().equals(listFromDb.get(i).getMacAddress())) {
                         isAdded = true;
@@ -251,15 +253,16 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
                     beaconMarkerView.setX(x - 64);
                     beaconMarkerView.setY(y - 64);
+                    beacon.setApsis(x - 64);
+                    beacon.setOrdinat(y - 64);
+
 
                     mapId = placeBeaconActivity.getMapID();
 
+                    beacon.setMapId(mapId);
 
-                    beacon.setId(myDbHelper.insertBeacon(markerName.getText().toString(),
-                            beacon.getMacAddress(),
-                            beaconMarkerView.getX(),
-                            beaconMarkerView.getY(),
-                            mapId));
+                    beacon.save();
+                    Log.e("Username", User.userName);
 
 
                     frameLayout.addView(beaconMarkerView, layoutParams1);
@@ -376,7 +379,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
     private void update(BeaconMarkerView v) {
         boolean isAdded = false;
-        final List<Beacon> listFromDb = Utility.getBeaconList(mapId, getActivity());
+        final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
         if (!v.getBeacon().getMacAddress().equals(selectedBeacon.getText())) {
             for (int i = 0; i < listFromDb.size(); i++) {
                 if (selectedBeacon.getText().equals(listFromDb.get(i).getMacAddress())) {

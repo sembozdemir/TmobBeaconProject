@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject.Login;
+package com.tmobtech.tmobbeaconproject;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.ParseException;
-import com.tmobtech.tmobbeaconproject.R;
 
-import com.tmobtech.tmobbeaconproject.ParseData.ParseCore;
+import com.tmobtech.tmobbeaconproject.utility.ParseCore;
 
 /*
 * Created by Deniz Katipoglu

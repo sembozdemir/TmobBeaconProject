@@ -1,4 +1,4 @@
-package com.tmobtech.tmobbeaconproject.UserGuide;
+package com.tmobtech.tmobbeaconproject.utility;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -52,7 +52,7 @@ public class UserGuideDialog {
         }
         if (isShown) {
             final Dialog dialog = new Dialog(activity);
-            dialog.setContentView(R.layout.guidedialog);
+            dialog.setContentView(R.layout.dialog_guide);
             dialog.setTitle("Info");
             Button Ok = (Button) dialog.findViewById(R.id.button5);
             final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.checkBox);

@@ -5,10 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.tmobtech.tmobbeaconproject.Beacon;
-import com.tmobtech.tmobbeaconproject.BeaconManager.FindBeacon;
-import com.tmobtech.tmobbeaconproject.BeaconPower;
-import com.tmobtech.tmobbeaconproject.Place;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.Place;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
@@ -132,11 +137,30 @@ public class Utility {
                 if (beaconPowerList.get(i).getBeacon().getMacAddress().equals(allBeaconPowers.get(j).getBeacon().getMacAddress()))
                 {
                     if (beaconPowerList.get(i).isAdded())
-                    allBeaconPowers.get(j).setAdded(true);
+                        allBeaconPowers.get(j).setAdded(true);
                 }
 
             }
         }
         return allBeaconPowers;
     }
+
+
+    public static  List<Beacon> getBeaconFromParse(String mapId)
+    {
+        final List<Beacon> beaconList=new ArrayList<>();
+        ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
+        query.whereEqualTo("objectId", mapId);
+        query.findInBackground(new FindCallback<Beacon>() {
+            @Override
+            public void done(List<Beacon> list, ParseException e) {
+                for (Beacon a : list) {
+                    beaconList.add(a);
+                }
+            }
+        });
+        return beaconList;
+    }
+
+
 }
