@@ -25,7 +25,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 import com.tmobtech.tmobbeaconproject.customviews.BeaconMarkerView;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
@@ -71,6 +77,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     static int listPosition;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,7 +95,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         try {
             imagePath = placeBeaconActivity.getImagePath();
             mapId = placeBeaconActivity.getMapID();
-         listBeacon =Utility.getBeaconFromParse(mapId);
+
+            listBeacon = Utility.getBeaconFromParse(mapId);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -125,11 +133,11 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         placeBeaconActivity = new PlaceBeaconActivity();
 
-        myDbHelper = new MyDbHelper(getActivity());
-
         listBeacon = new ArrayList<>();
 
         findBeacon = FindBeacon.getInstance(getActivity());
+
+
 
 
     }
@@ -154,7 +162,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 try {
                     ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
                     parentView.removeView(markerViewClass);
-                    myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
+                   // myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                     dialog.cancel();
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
@@ -238,6 +246,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
             if (markerName.getText().toString().trim().length() > 0) {
 
+                /*Todo degisecek
                 final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
                 for (int i = 0; i < listFromDb.size(); i++) {
                     if (((org.altbeacon.beacon.Beacon)list.get(listPosition)).getBluetoothAddress().equals(listFromDb.get(i).getMacAddress())) {
@@ -245,6 +254,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     }
                 }
 
+*/
                 if (!isAdded) {
                     beacon.setBeaconName(markerName.getText().toString());
 
@@ -255,6 +265,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     beaconMarkerView.setY(y - 64);
                     beacon.setApsis(x - 64);
                     beacon.setOrdinat(y - 64);
+
 
 
                     mapId = placeBeaconActivity.getMapID();
@@ -361,7 +372,8 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                             try {
                                 ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
                                 parentView.removeView(markerViewClass);
-                                myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
+                                ((BeaconMarkerView) markerViewClass).getBeacon().deleteInBackground();
+                               // myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                                 dialog.cancel();
                             } catch (Exception e) {
                                 Log.e(TAG, e.toString());
@@ -377,17 +389,22 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
     }
 
 
-    private void update(BeaconMarkerView v) {
-        boolean isAdded = false;
-        final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
+    private void update(final BeaconMarkerView v) {
+        boolean macAdressIsUnique = true;
+
+        try {
+            listBeacon = Utility.getBeaconFromParse(mapId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (!v.getBeacon().getMacAddress().equals(selectedBeacon.getText())) {
-            for (int i = 0; i < listFromDb.size(); i++) {
-                if (selectedBeacon.getText().equals(listFromDb.get(i).getMacAddress())) {
-                    isAdded = true;
+            for (int i = 0; i < listBeacon.size(); i++) {
+                if (selectedBeacon.getText().equals(listBeacon.get(i).getMacAddress())) {
+                    macAdressIsUnique = false;
                 }
             }
 
-            if (!isAdded) {
+            if (macAdressIsUnique) {
                 try {
                     v.getBeacon().setBeaconName(markerName.getText().toString());
                 } catch (Exception e) {
@@ -400,8 +417,25 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 }
 
                 try {
-                    myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
-                    myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Beacon");
+
+// Retrieve the object by id
+                    query.getInBackground(v.getBeacon().getObjectId(), new GetCallback<ParseObject>() {
+                        public void done(ParseObject beaconObject, ParseException e) {
+                            if (e == null) {
+                                beaconObject.put(Constants.COLUMN_BEACON_NAME,markerName.getText().toString());
+                                beaconObject.put(Constants.COLUMN_BEACON_MAC_ADDRESS, list.get(listPosition).getBluetoothAddress());
+                                try {
+                                    beaconObject.save();
+                                } catch (ParseException e1) {
+                                    e1.printStackTrace();
+                                }
+
+                            }
+                        }
+                    });
+                   // myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
+                 //   myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
 
                 } catch (Exception e) {
 
@@ -413,8 +447,31 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
         }
         else
         {
-            v.getBeacon().setBeaconName(markerName.getText().toString());
-            myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
+            try {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Beacon");
+
+// Retrieve the object by id
+                query.getInBackground(v.getBeacon().getObjectId(), new GetCallback<ParseObject>() {
+                    public void done(ParseObject beaconObject, ParseException e) {
+                        if (e == null) {
+
+
+
+
+
+                          v.getBeacon().setBeaconName(markerName.getText().toString());
+                            beaconObject.put(Constants.COLUMN_BEACON_NAME,markerName.getText().toString());
+                            beaconObject.saveInBackground();
+
+                        }
+                    }
+                });
+                // myDbHelper.updateBeaconName(v.getBeacon().getId(), markerName.getText().toString());
+                //   myDbHelper.updateBeaconMacAddress(v.getBeacon().getId(), list.get(listPosition).getBluetoothAddress());
+
+            } catch (Exception e) {
+
+            }
             dialog.cancel();
 
         }

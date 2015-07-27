@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
@@ -242,9 +243,11 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "Please give a name for your map", Toast.LENGTH_LONG).show();
         } else {
             mBeaconMap.setName(mEditText.getText().toString());
+            mBeaconMap.setUserId(ParseUser.getCurrentUser().getObjectId());
             save();
             Intent intent = new Intent(this, PlaceBeaconActivity.class);
             intent.putExtra("mapId", mBeaconMap.getObjectId());
+            intent.putExtra("imagePath",mBeaconMap.get("img_path").toString());
 
             startActivity(intent);
             finish();

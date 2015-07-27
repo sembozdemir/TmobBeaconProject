@@ -255,20 +255,20 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
                 for (int i=0;i<beaconPowersFromDb.size();i++)
                 {
                     if (beaconPower.getBeacon().getBeaconName().equals(beaconPowersFromDb.get(i).getBeacon().getBeaconName())) {
-                        myDbHelper.updateBeaconMeasured(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
+                    //    myDbHelper.updateBeaconMeasured(beaconPower.getBeacon().getId(), place.getPlaceId(), beaconPower.getDistance());
 
                         isAddedFromDb=true;
                     }
                     }
-                if (!isAddedFromDb)
-                    myDbHelper.insertBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId(),beaconPower.getDistance());
+                //if (!isAddedFromDb)
+            //        myDbHelper.insertBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId(),beaconPower.getDistance());
             }
             else
             {
                 for (int i=0;i<beaconPowersFromDb.size();i++)
                 {
                     if (beaconPower.getBeacon().getBeaconName().equals(beaconPowersFromDb.get(i).getBeacon().getBeaconName())) {
-                        myDbHelper.deleteBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId());
+              //          myDbHelper.deleteBeaconMeasure(beaconPower.getBeacon().getId(),place.getPlaceId());
 
 
                     }

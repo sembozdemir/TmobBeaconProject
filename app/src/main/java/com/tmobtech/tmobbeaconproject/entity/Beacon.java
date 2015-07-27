@@ -2,83 +2,59 @@ package com.tmobtech.tmobbeaconproject.entity;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 
 /**
  * Created by Ozberk on 15.7.2015.
  */
 @ParseClassName("Beacon")
 public class Beacon extends ParseObject {
-    private long id;
-    private String beaconName;
-    private String macAddress;
-    private float apsis;
-    private float ordinat;
-    private  String mapId;
+
+
 
     public String getMapId() {
-        return mapId;
+        return  getString(Constants.COLUMN_BEACON_MAP_ID);
     }
 
     public void setMapId(String mapId) {
-        this.mapId = mapId;
+        put(Constants.COLUMN_BEACON_MAP_ID,mapId);
     }
 
-    public Beacon() {
-    }
 
-    public Beacon(String beaconName, String macAddress, float apsis, float ordinat) {
-        this.beaconName = beaconName;
-        this.macAddress = macAddress;
-        this.apsis = apsis;
-        this.ordinat = ordinat;
-    }
-
-    public Beacon(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-        put("beacon_id",id);
-    }
 
     public String getBeaconName() {
-        return beaconName;
+        return getString(Constants.COLUMN_BEACON_NAME);
     }
 
     public void setBeaconName(String beaconName) {
-        this.beaconName = beaconName;
-        put("beacon_name",beaconName);
+
+        put(Constants.COLUMN_BEACON_NAME,beaconName);
     }
 
     public String getMacAddress() {
-        return macAddress;
+        return getString(Constants.COLUMN_BEACON_MAC_ADDRESS);
     }
 
     public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
-        put("mac_adress",macAddress);
+
+        put(Constants.COLUMN_BEACON_MAC_ADDRESS,macAddress);
     }
 
     public float getApsis() {
-        return apsis;
+        return  getNumber(Constants.COLUMN_BEACON_APSIS).floatValue();
     }
 
     public void setApsis(float apsis) {
-        this.apsis = apsis;
-        put("apsis",apsis);
+
+        put(Constants.COLUMN_BEACON_APSIS,apsis);
     }
 
     public float getOrdinat() {
-        return ordinat;
+        return  getNumber(Constants.COLUMN_BEACON_ORDINAT).floatValue();
     }
 
     public void setOrdinat(float ordinat) {
-        this.ordinat = ordinat;
-        put("ordinat",ordinat);
+
+        put(Constants.COLUMN_BEACON_ORDINAT,ordinat);
     }
 }

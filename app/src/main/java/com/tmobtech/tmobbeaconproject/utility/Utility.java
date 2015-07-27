@@ -44,7 +44,7 @@ public class Utility {
                         beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
                         beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
                         beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
-                        beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
+                        //beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
                         beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
 
                         list.add(beacon);
@@ -115,7 +115,7 @@ public class Utility {
     }
 
     private static Beacon getBeaconFromDb(Context context, long beaconId) {
-        Beacon beacon = new Beacon(beaconId);
+        Beacon beacon = new Beacon();
         MyDbHelper myDbHelper = new MyDbHelper(context);
         Cursor cursor = myDbHelper.getBeaconFromId(beaconId);
         if (cursor.moveToFirst()) {
@@ -146,21 +146,15 @@ public class Utility {
     }
 
 
-    public static  List<Beacon> getBeaconFromParse(String mapId)
-    {
-        final List<Beacon> beaconList=new ArrayList<>();
+    public static  List<Beacon> getBeaconFromParse(String mapId) throws ParseException {
+        final List<Beacon> beaconList;
         ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
-        query.whereEqualTo("objectId", mapId);
-        query.findInBackground(new FindCallback<Beacon>() {
-            @Override
-            public void done(List<Beacon> list, ParseException e) {
-                for (Beacon a : list) {
-                    beaconList.add(a);
-                }
-            }
-        });
+        query=new ParseQuery<Beacon>("Beacon");
+        query.whereEqualTo("beacons_map_id", mapId);
+        beaconList=query.find();
         return beaconList;
     }
+
 
 
 }

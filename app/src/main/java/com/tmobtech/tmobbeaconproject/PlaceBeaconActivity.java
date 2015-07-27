@@ -57,18 +57,11 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
 
 
     private void initialize() {
-        myDbHelper = new MyDbHelper(PlaceBeaconActivity.this);
+
         mapID = getIntent().getStringExtra("mapId");
-        getImageMap();
-    }
-
-    private void getImageMap() {
-
-
         imagePath=getIntent().getStringExtra("imagePath");
-
-
     }
+
 
     public String getImagePath() {
         return imagePath;

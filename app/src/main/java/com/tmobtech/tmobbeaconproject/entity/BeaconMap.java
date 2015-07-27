@@ -10,43 +10,39 @@ import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 
 @ParseClassName("BeaconMap")
 public class BeaconMap extends ParseObject {
-    private long id;
-    private String name;
-    private String imagePath;
 
-    public BeaconMap(long id, String name, String imagePath) {
-        this.id = id;
-        this.name = name;
-        this.imagePath = imagePath;
-    }
 
-    public BeaconMap(String imagePath, String name) {
-        this.imagePath = imagePath;
-        this.name = name;
-    }
 
-    public BeaconMap() {
 
-    }
 
 
 
     public String getName() {
-        return name;
+
+        return getString(Constants.COLUMN_MAP_NAME);
     }
 
     public void setName(String name) {
-        this.name = name;
+
         put(Constants.COLUMN_MAP_NAME,name);
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImagePath(){
+        return  getString(Constants.COLUMN_MAP_IMAGE_PATH);
     }
 
     public void setImagePath(String imagePath) {
 
-        this.imagePath = imagePath;
+
         put(Constants.COLUMN_MAP_IMAGE_PATH,imagePath);
+    }
+
+    public void setUserId(String objectId) {
+
+        put("userId",objectId);
+    }
+
+    public String getUserId() {
+        return getString("userId");
     }
 }

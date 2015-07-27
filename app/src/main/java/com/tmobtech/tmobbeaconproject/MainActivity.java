@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -154,23 +155,23 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private List<BeaconMap> getBeaconMapsArray() {
-        final List<BeaconMap> beaconMaps=new ArrayList<>();
+       List<BeaconMap> beaconMaps=new ArrayList<>();
         ParseQuery<BeaconMap> query = ParseQuery.getQuery(BeaconMap.class);
-        query.whereEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
-        query.findInBackground(new FindCallback<BeaconMap>() {
-            @Override
-            public void done(List<BeaconMap> results, ParseException e) {
-                for (BeaconMap a : results) {
-                  beaconMaps.add(a);
-                }
-            }
-        });
+        query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
+        Log.e("UserId=",ParseUser.getCurrentUser().getObjectId());
+        try {
+            beaconMaps=query.find();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return beaconMaps;
     }
 
     private void onMapSelected(BeaconMap beaconMap) {
         Intent placeBeaconIntent = new Intent(MainActivity.this, PlaceBeaconActivity.class);
         placeBeaconIntent.putExtra("mapId", beaconMap.getObjectId());
+        placeBeaconIntent.putExtra("imagePath",beaconMap.getImagePath());
         startActivity(placeBeaconIntent);
 
     }
