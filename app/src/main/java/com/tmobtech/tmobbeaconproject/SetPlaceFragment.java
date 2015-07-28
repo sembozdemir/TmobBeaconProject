@@ -274,7 +274,19 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
 
     private void deletePlace(Place place) {
+        List<BeaconPower> beaconPowers=null;
         place.deleteInBackground();
+        ParseQuery<BeaconPower> parseQuery=ParseQuery.getQuery("BeaconPower");
+        parseQuery.whereEqualTo("place_Id", place.getObjectId());
+        try {
+           beaconPowers=parseQuery.find();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (BeaconPower list:beaconPowers)
+        {
+            list.deleteInBackground();
+        }
         Toast.makeText(getActivity(), "deleted", Toast.LENGTH_LONG).show();
     }
 
