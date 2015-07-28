@@ -1,7 +1,6 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,15 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 
 /**
  * Created by Ozberk on 15.7.2015.
  */
 public class PlaceBeaconActivity extends ActionBarActivity implements View.OnClickListener {
     static String mapID;
-    MyDbHelper myDbHelper;
-    Cursor cursor;
     static String imagePath;
     private String TAG = "PlaceBeaconActivityError";
 
@@ -57,11 +57,9 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
 
 
     private void initialize() {
-
         mapID = getIntent().getStringExtra("mapId");
         imagePath=getIntent().getStringExtra("imagePath");
     }
-
 
     public String getImagePath() {
         return imagePath;
@@ -109,33 +107,41 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
 
         switch (id) {
             case R.id.action_edit:
-               // editMap(mapID); TODO DEGISICEK
+                editMap(mapID);
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void editMap(final long mapID) {
+    private void editMap(final String mapID) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_edit_map);
         dialog.setTitle("Edit Map");
-        String mapName = "";
-        Cursor cursor = myDbHelper.getMapFromId(mapID);
-        if (cursor.moveToFirst()) {
-            mapName = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_MAP_NAME));
-        }
-        final EditText editText = (EditText) dialog.findViewById(R.id.editText_map_name_edit_dialog);
-        editText.setText(mapName);
-        editText.setSelection(editText.getText().toString().length());
 
-        Button button = (Button) dialog.findViewById(R.id.button_edit_dialog);
-        button.setOnClickListener(new View.OnClickListener() {
+        final EditText editText = (EditText) dialog.findViewById(R.id.editText_map_name_edit_dialog);
+        final Button button = (Button) dialog.findViewById(R.id.button_edit_dialog);
+
+        ParseQuery<BeaconMap> query = ParseQuery.getQuery("BeaconMap");
+        query.getInBackground(mapID, new GetCallback<BeaconMap>() {
             @Override
-            public void onClick(View v) {
-                if (!editText.getText().toString().equals("")){
-                    myDbHelper.updateMapName(mapID, editText.getText().toString());
-                    dialog.cancel();
+            public void done(final BeaconMap beaconMap, ParseException e) {
+                if (e == null) {
+                    editText.setText(beaconMap.getName());
+                    editText.setSelection(editText.getText().toString().length());
+
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!editText.getText().toString().equals("")) {
+                                beaconMap.setName(editText.getText().toString());
+                                beaconMap.saveInBackground();
+                                dialog.cancel();
+                            }
+                        }
+                    });
+                } else {
+                    // something went wrong
                 }
             }
         });

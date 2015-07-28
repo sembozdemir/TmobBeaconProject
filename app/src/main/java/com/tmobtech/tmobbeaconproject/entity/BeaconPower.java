@@ -9,42 +9,39 @@ import com.tmobtech.tmobbeaconproject.ParseData.Constants;
  */
 @ParseClassName("BeaconPower")
 public class BeaconPower extends ParseObject {
-    private Beacon beacon;
-    private double distance;
-    private boolean isAdded;
 
-    public BeaconPower() {
+    public String getBeaconId() {
+        return getString(Constants.COLUMN_BEACON_MEASURE_BEACON_ID);
     }
 
-    public BeaconPower(Beacon beacon, double distance, boolean isAdded) {
-        this.beacon = beacon;
-        this.distance = distance;
-        this.isAdded = isAdded;
+    public void setBeaconId(String beaconId) {
+        put(Constants.COLUMN_BEACON_MEASURE_BEACON_ID, beaconId);
     }
 
-    public Beacon getBeacon() {
-        return (Beacon) get(Constants.COLUMN_BEACON_MEASURE_BEACON_ID);
+    public String getPlaceId() {
+        return getString(Constants.COLUMN_BEACON_MEASURE_PLACE_ID);
     }
 
-    public void setBeacon(Beacon beacon) {
-        this.beacon = beacon;
-        put(Constants.COLUMN_BEACON_MEASURE_BEACON_ID, beacon.getObjectId());
+    public void setPlaceId(String placeId) {
+        put(Constants.COLUMN_BEACON_MEASURE_PLACE_ID, placeId);
     }
 
-    public double getDistance() {
+    public double getPower() {
         return getDouble(Constants.COLUMN_BEACON_MEASURE_POWER);
     }
 
-    public void setDistance(float distance) {
-        this.distance = distance;
-        put(Constants.COLUMN_BEACON_MEASURE_POWER, distance);
+    public void setPower(double power) {
+        put(Constants.COLUMN_BEACON_MEASURE_POWER, power);
     }
 
-    public boolean isAdded() {
-        return isAdded;
-    }
+    public LocalBeaconPower toLocalBeaconPower(String beaconName, String beaconMacAddress) {
+        LocalBeaconPower localBeaconPower = new LocalBeaconPower();
+        localBeaconPower.setBeaconId(getBeaconId());
+        localBeaconPower.setBeaconName(beaconName);
+        localBeaconPower.setBeaconMacAddress(beaconMacAddress);
+        localBeaconPower.setBeaconDistance(getPower());
+        localBeaconPower.setBeaconIsAdded(true);
 
-    public void setAdded(boolean isAdded) {
-        this.isAdded = isAdded;
+        return localBeaconPower;
     }
 }

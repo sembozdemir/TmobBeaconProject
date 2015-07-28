@@ -1,20 +1,14 @@
 package com.tmobtech.tmobbeaconproject.utility;
 
-import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
 import android.util.Log;
 
-import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
-import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
 import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.LocalBeaconPower;
 import com.tmobtech.tmobbeaconproject.entity.Place;
-import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,53 +20,20 @@ public class Utility {
 
     private static String TAG="UtilityError";
 
-    public static List<Beacon> getBeaconList (long mapId,Activity activity)
-    {
-        List<Beacon> list;
-        list=new ArrayList<>();
 
-        MyDbHelper myDbHelper = new MyDbHelper(activity);
-        try {
-
-            Cursor cursor = myDbHelper.getBeaconsAtMap(mapId);
-            if (cursor.moveToFirst()) {
-                do {
-                    try {
-
-                        Beacon beacon = new Beacon();
-                        beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_NAME)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-                        beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
-                        beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
-                        //beacon.setId(cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ID)));
-                        beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-
-                        list.add(beacon);
-
-                    } catch (Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
-
-
-        return  list;
-
-    }
-
-    public static List<BeaconPower> getBeaconPowers(FindBeacon findBeacon,List<Beacon> list,Activity activity) {
+    public static List<LocalBeaconPower> getBeaconPowers(FindBeacon findBeacon,List<Beacon> list) {
 
         List<org.altbeacon.beacon.Beacon> ls = findBeacon.ls;
-        List<BeaconPower> beaconPowerList = new ArrayList<>();
+        List<LocalBeaconPower> beaconPowerList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j < ls.size(); j++) {
                 if (list.get(i).getMacAddress().equals(ls.get(j).getBluetoothAddress())) {
-                    BeaconPower beaconPower = new BeaconPower(list.get(i), ls.get(j).getDistance(), false);
+                    LocalBeaconPower beaconPower = new LocalBeaconPower();
+                    beaconPower.setBeaconId(list.get(i).getObjectId());
+                    beaconPower.setBeaconName(list.get(i).getBeaconName());
+                    beaconPower.setBeaconMacAddress(list.get(i).getMacAddress());
+                    beaconPower.setBeaconDistance(ls.get(j).getDistance());
+                    beaconPower.setBeaconIsAdded(false);
                     beaconPowerList.add(beaconPower);
                 }
             }
@@ -80,87 +41,79 @@ public class Utility {
         return beaconPowerList;
     }
 
-    public static List<Place> getPlaceList(Context context, long mapID) {
-        List<Place> placeList = new ArrayList<>();
-        MyDbHelper myDbHelper = new MyDbHelper(context);
-        Cursor cursor = myDbHelper.getPlacesAtMap(mapID);
-        if (cursor.moveToFirst()) {
-            do {
-                long placeId = cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_ID));
-                String placeName = cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_NAME));
-                float apsis = cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_APSIS));
-                float ordinat = cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_PLACE_ORDINAT));
-                Place place = new Place(placeId, placeName, apsis, ordinat, getBeaconPowersFromDb(context, placeId));
-                placeList.add(place);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return placeList;
-    }
-
-    public static List<BeaconPower> getBeaconPowersFromDb(Context context, long placeId) {
-        List<BeaconPower> beaconPowerList = new ArrayList<>();
-        MyDbHelper myDbHelper = new MyDbHelper(context);
-        Cursor cursor = myDbHelper.getMeasurePowersForPlace(placeId);
-        if (cursor.moveToFirst()) {
-            do {
-                long beaconId = cursor.getLong(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MEASURE_BEACON_ID));
-                double power = cursor.getDouble(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MEASURE_POWER));
-                BeaconPower beaconPower = new BeaconPower(getBeaconFromDb(context, beaconId), power, true);
-                beaconPowerList.add(beaconPower);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return beaconPowerList;
-    }
-
-    private static Beacon getBeaconFromDb(Context context, long beaconId) {
-        Beacon beacon = new Beacon();
-        MyDbHelper myDbHelper = new MyDbHelper(context);
-        Cursor cursor = myDbHelper.getBeaconFromId(beaconId);
-        if (cursor.moveToFirst()) {
-            beacon.setBeaconName(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_NAME)));
-            beacon.setMacAddress(cursor.getString(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_MAC_ADDRESS)));
-            beacon.setApsis(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_APSIS)));
-            beacon.setOrdinat(cursor.getFloat(cursor.getColumnIndex(MyDbHelper.COLUMN_BEACON_ORDINAT)));
-        }
-        cursor.close();
-        return beacon;
-    }
-/*
-    public static List<BeaconPower> getCheckedBeaconPowers(List<BeaconPower> beaconPowerList, FindBeacon findBeacon, long mapId, Activity context) {
-        List<BeaconPower> allBeaconPowers = getBeaconPowers(findBeacon, mapId, context);
+    public static List<LocalBeaconPower> getCheckedBeaconPowers(List<LocalBeaconPower> beaconPowerList, FindBeacon findBeacon, List<Beacon> beaconList) {
+        List<LocalBeaconPower> allBeaconPowers = getBeaconPowers(findBeacon, beaconList);
         for (int i=0;i<beaconPowerList.size();i++)
         {
             for (int j=0;j<allBeaconPowers.size();j++)
             {
-                if (beaconPowerList.get(i).getBeacon().getMacAddress().equals(allBeaconPowers.get(j).getBeacon().getMacAddress()))
+                if (beaconPowerList.get(i).getBeaconMacAddress().equals(allBeaconPowers.get(j).getBeaconMacAddress()))
                 {
-                    if (beaconPowerList.get(i).isAdded())
-                        allBeaconPowers.get(j).setAdded(true);
+                    if (beaconPowerList.get(i).isBeaconIsAdded())
+                        allBeaconPowers.get(j).setBeaconIsAdded(true);
                 }
 
             }
         }
         return allBeaconPowers;
     }
-*/
+
+
 
     public static  List<Beacon> getBeaconFromParse(String mapId) {
-        List<Beacon> beaconList=null;
         try {
-            ;
+            List<Beacon> beaconList;
             ParseQuery<Beacon> query = ParseQuery.getQuery(Beacon.class);
-            query.whereEqualTo("beacons_map_id", mapId);
+            query.whereEqualTo(Constants.COLUMN_BEACON_MAP_ID, mapId);
             beaconList=query.find();
-           return  beaconList;
+            return beaconList;
         } catch (ParseException e) {
-           Log.e(TAG,e.toString());
-
+            Log.e(TAG, e.getMessage());
         }
         return null;
     }
 
 
+    public static List<Place> getPlaceFromParse(String mapID) {
+        try {
+            List<Place> placeList;
+            ParseQuery<Place> query = ParseQuery.getQuery(Place.class);
+            query.whereEqualTo(Constants.COLUMN_PLACE_MAP_ID, mapID);
+            placeList = query.find();
+            return placeList;
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return null;
+    }
 
+    public static List<BeaconPower> getBeaconPowerToSave(List<LocalBeaconPower> beaconPowersListe, String placeId) {
+        List<BeaconPower> beaconPowers = new ArrayList<>();
+
+        for (LocalBeaconPower localBeaconPower : beaconPowersListe) {
+            if (localBeaconPower.isBeaconIsAdded()) {
+                beaconPowers.add(localBeaconPower.toBeaconPower(placeId));
+            }
+        }
+        return beaconPowers;
+    }
+
+    public static List<LocalBeaconPower> getBeaconPowersFromParse(String placeId) {
+        ParseQuery<BeaconPower> query = ParseQuery.getQuery(BeaconPower.class);
+        query.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_PLACE_ID, placeId);
+        final List<LocalBeaconPower> localBeaconPowers = new ArrayList<>();
+        try {
+            List<BeaconPower> beaconPowers =  query.find();
+            for (final BeaconPower beaconPower : beaconPowers) {
+                ParseQuery<Beacon> beaconParseQuery = ParseQuery.getQuery(Beacon.class);
+                Beacon beacon = beaconParseQuery.get(beaconPower.getBeaconId());
+                localBeaconPowers.add(beaconPower.toLocalBeaconPower(beacon.getBeaconName(),
+                        beacon.getMacAddress()));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return localBeaconPowers;
+    }
 }

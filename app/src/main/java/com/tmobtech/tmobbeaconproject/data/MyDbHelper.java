@@ -158,7 +158,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_PLACES_NAME, null, values);
     }
 
-    public int deletePlace(long placeId) {
+    public int deletePlace(String placeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_PLACE_ID + " = ?";
         String[] whereArgs = new String[]{
@@ -167,7 +167,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_PLACES_NAME, whereClause, whereArgs);
     }
 
-    public long insertBeaconMeasure(long beaconId, long placeId, double power) {
+    public long insertBeaconMeasure(long beaconId, String placeId, double power) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_BEACON_MEASURE_BEACON_ID, beaconId);
@@ -248,7 +248,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 selectionArgs, null, null, null, null);
     }
 
-    public Cursor getMeasurePowersForPlace(long placeId) {
+    public Cursor getMeasurePowersForPlace(String placeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = COLUMN_BEACON_MEASURE_PLACE_ID + "=?";
         String[] selectionArgs = new String[]{"" + placeId};
@@ -307,7 +307,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.update(TABLE_BEACONS_NAME, values, whereClause, whereArgs);
     }
 
-    public int updatePlaceName(long placeId, String newPlaceName) {
+    public int updatePlaceName(String placeId, String newPlaceName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_PLACE_ID + " = ?";
         String[] whereArgs = new String[]{
@@ -330,7 +330,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.update(TABLE_PLACES_NAME, values, whereClause, whereArgs);
     }
 
-    public int updateBeaconMeasured(long beaconId, long placeId, double power) {
+    public int updateBeaconMeasured(long beaconId, String placeId, double power) {
 
         //String query="Update from "+TABLE_BEACON_MEASURE_NAME +"Set";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -344,7 +344,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
         return db.update(TABLE_BEACON_MEASURE_NAME, values, whereClause, whereArgs);
     }
 
-    public int deleteBeaconMeasure(long beaconId, long placeId) {
+    public int deleteBeaconMeasure(long beaconId, String placeId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = COLUMN_BEACON_MEASURE_BEACON_ID + "=? AND " +
                 COLUMN_BEACON_MEASURE_PLACE_ID + "=?";

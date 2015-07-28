@@ -5,6 +5,8 @@ import android.app.Application;
 import com.parse.ParseObject;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.Place;
 
 
 /**
@@ -18,6 +20,8 @@ public class TmobApplication extends Application {
 
         ParseObject.registerSubclass(Beacon.class);
         ParseObject.registerSubclass(BeaconMap.class);
+        ParseObject.registerSubclass(Place.class);
+        ParseObject.registerSubclass(BeaconPower.class);
 
 
     }

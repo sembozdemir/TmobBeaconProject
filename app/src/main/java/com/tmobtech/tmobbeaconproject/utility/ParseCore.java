@@ -9,11 +9,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-
 import com.tmobtech.tmobbeaconproject.MainActivity;
-import com.tmobtech.tmobbeaconproject.PlaceBeaconActivity;
 import com.tmobtech.tmobbeaconproject.User;
-import com.tmobtech.tmobbeaconproject.entity.Beacon;
 
 /**
  * Created by ozberkcetin on 24/07/15.
@@ -108,13 +105,4 @@ public class ParseCore {
 
 
     }
-
-
-    public  static void  registerBeacon (Beacon beacon) throws ParseException {
-        beacon.save();
-
-    }
-
-
-
 }

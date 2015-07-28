@@ -2,7 +2,6 @@ package com.tmobtech.tmobbeaconproject;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
@@ -20,9 +19,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
-import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
+import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +44,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         UserGuideDialog userGuideDialog=new UserGuideDialog(MainActivity.this,"homePage");
 
         initViews();
-        // Get Database Helper
-
 
         // set OnClickListener for Floating Action Button
         mFabCamera.setOnClickListener(new View.OnClickListener() {

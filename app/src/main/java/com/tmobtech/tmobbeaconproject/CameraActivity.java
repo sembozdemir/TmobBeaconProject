@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
@@ -183,8 +181,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
      */
     private void previewCapturedImage(String imagePath) {
 //        try {
-            mImgPreview.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(imagePath).fit().centerInside().into(mImgPreview);
+        mImgPreview.setVisibility(View.VISIBLE);
+        Picasso.with(this).load(imagePath).fit().centerInside().into(mImgPreview);
     }
 
 
@@ -245,9 +243,6 @@ public class CameraActivity extends Activity implements View.OnClickListener {
             mBeaconMap.setName(mEditText.getText().toString());
             mBeaconMap.setUserId(ParseUser.getCurrentUser().getObjectId());
             save();
-           
-
-          
         }
     }
 
@@ -258,12 +253,13 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 if (e == null) {
                     goToPlaceBeaconActivity();
                 } else {
-                    // TODO: show Toast
+                    //Utility.showSavingError(getApplicationContext());
                 }
             }
 
         });
     }
+
     private void goToPlaceBeaconActivity() {
         Intent intent = new Intent(this, PlaceBeaconActivity.class);
         intent.putExtra("mapId", mBeaconMap.getObjectId());

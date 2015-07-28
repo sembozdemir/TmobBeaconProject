@@ -9,14 +9,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.LocalBeaconPower;
 
 import java.util.List;
 
 /**
  * Created by semih on 21.07.2015.
  */
-public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
+public class BeaconPowerListAdapter extends ArrayAdapter<LocalBeaconPower> {
 
     // View lookup cache
     private static class ViewHolder {
@@ -25,14 +25,14 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
         CheckBox checkBoxIsAdded;
     }
 
-    public BeaconPowerListAdapter(Context context, List<BeaconPower> objects) {
+    public BeaconPowerListAdapter(Context context, List<LocalBeaconPower> objects) {
         super(context, R.layout.list_item_dialog_place, objects);
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        BeaconPower beaconPower = getItem(position);
+        LocalBeaconPower beaconPower = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -47,19 +47,21 @@ public class BeaconPowerListAdapter extends ArrayAdapter<BeaconPower> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.textViewName.setText(beaconPower.getBeacon().getBeaconName());
-        viewHolder.textViewDistance.setText("" + beaconPower.getDistance());
-        viewHolder.checkBoxIsAdded.setChecked(beaconPower.isAdded());
+        viewHolder.textViewName.setText(beaconPower.getBeaconName());
+        viewHolder.textViewDistance.setText("" + beaconPower.getBeaconDistance());
+        viewHolder.checkBoxIsAdded.setChecked(beaconPower.isBeaconIsAdded());
 
         viewHolder.checkBoxIsAdded.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                 {
-                    SetPlaceFragment.beaconPowersListe.get(position).setAdded(true);
+                    SetPlaceFragment.checkedBeaconPowersListe.get(position).setBeaconIsAdded(true);
                 }
-                else
-                    SetPlaceFragment.beaconPowersListe.get(position).setAdded(false);
+                else {
+                    SetPlaceFragment.checkedBeaconPowersListe.get(position).setBeaconIsAdded(false);
+                }
+
 
             }
         });
