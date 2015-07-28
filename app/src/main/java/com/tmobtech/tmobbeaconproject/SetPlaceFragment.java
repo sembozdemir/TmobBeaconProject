@@ -222,6 +222,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
                     placeMarkerView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            mClickedPlaceMarkerView = (PlaceMarkerView) v;
                             Place place = ((PlaceMarkerView) v).getPlace();
                             createDialog(place);
                             dialog.show();
@@ -240,10 +241,6 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
                 checkedBeaconPowersListe =Utility.getBeaconPowers(findBeacon,beaconList);
                 beaconPowerListAdapter=new BeaconPowerListAdapter(getActivity(),checkedBeaconPowersListe);
                 beaconPowerListView.setAdapter(beaconPowerListAdapter);
-
-
-
-
             }
         });
     }
@@ -274,19 +271,19 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
 
 
     private void deletePlace(Place place) {
-        List<BeaconPower> beaconPowers=null;
+        ParseQuery<BeaconPower> parseQuery = ParseQuery.getQuery(BeaconPower.class);
+        parseQuery.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_PLACE_ID, place.getObjectId());
+        parseQuery.findInBackground(new FindCallback<BeaconPower>() {
+            @Override
+            public void done(List<BeaconPower> list, ParseException e) {
+                if (e == null) {
+                    for (BeaconPower beaconPower : list) {
+                        beaconPower.deleteInBackground();
+                    }
+                }
+            }
+        });
         place.deleteInBackground();
-        ParseQuery<BeaconPower> parseQuery=ParseQuery.getQuery("BeaconPower");
-        parseQuery.whereEqualTo("place_Id", place.getObjectId());
-        try {
-           beaconPowers=parseQuery.find();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        for (BeaconPower list:beaconPowers)
-        {
-            list.deleteInBackground();
-        }
         Toast.makeText(getActivity(), "deleted", Toast.LENGTH_LONG).show();
     }
 

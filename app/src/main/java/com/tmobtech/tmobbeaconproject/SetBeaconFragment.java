@@ -29,14 +29,12 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 import com.tmobtech.tmobbeaconproject.ParseData.Constants;
 import com.tmobtech.tmobbeaconproject.customviews.BeaconMarkerView;
 import com.tmobtech.tmobbeaconproject.data.MyDbHelper;
 import com.tmobtech.tmobbeaconproject.entity.Beacon;
 import com.tmobtech.tmobbeaconproject.utility.FindBeacon;
-import com.tmobtech.tmobbeaconproject.utility.ParseCore;
 import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 import com.tmobtech.tmobbeaconproject.utility.Utility;
 
@@ -162,7 +160,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                 try {
                     ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
                     parentView.removeView(markerViewClass);
-                   // myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
+                    ((BeaconMarkerView) markerViewClass).getBeacon().deleteInBackground();
                     dialog.cancel();
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
@@ -372,7 +370,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                                 ViewGroup parentView = (ViewGroup) markerViewClass.getParent();
                                 parentView.removeView(markerViewClass);
                                 ((BeaconMarkerView) markerViewClass).getBeacon().deleteInBackground();
-                               // myDbHelper.deleteBeacon(((BeaconMarkerView) markerViewClass).getBeacon().getId());
                                 dialog.cancel();
                             } catch (Exception e) {
                                 Log.e(TAG, e.toString());
