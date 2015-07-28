@@ -48,6 +48,7 @@ public  FindBeacon(Activity activity){
         if (findBeaconInstance==null)
         {
             findBeaconInstance=new FindBeacon(activity);
+            return  findBeaconInstance;
         }
         return findBeaconInstance;
     }
@@ -55,7 +56,7 @@ public  FindBeacon(Activity activity){
     @Override
     public void onBeaconServiceConnect() {
 
-
+Log.e("ConnectedService","ConnectedService");
         try {
             beaconManager.setRangeNotifier(new RangeNotifier() {
                 @Override

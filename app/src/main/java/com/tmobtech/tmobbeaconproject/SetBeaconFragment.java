@@ -135,7 +135,7 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
 
         listBeacon = new ArrayList<>();
 
-        findBeacon = FindBeacon.getInstance(getActivity());
+        findBeacon = new FindBeacon(getActivity());
 
 
 
@@ -216,10 +216,10 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         try {
-                            listPosition=position;
-                            selectedBeacon.setText( list.get(position).getBluetoothAddress());
+                            listPosition = position;
+                            selectedBeacon.setText(list.get(position).getBluetoothAddress());
+                        } catch (Exception e) {
                         }
-                        catch (Exception e){}
 
                     }
                 });
@@ -245,7 +245,6 @@ public class SetBeaconFragment extends Fragment implements View.OnTouchListener,
             Beacon beacon = new Beacon();
 
             if (markerName.getText().toString().trim().length() > 0) {
-
 
                 final List<Beacon> listFromDb = Utility.getBeaconFromParse(mapId);
                 for (int i = 0; i < listFromDb.size(); i++) {

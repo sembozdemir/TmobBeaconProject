@@ -57,6 +57,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
     static List<LocalBeaconPower> checkedBeaconPowersListe;
     private PlaceMarkerView mClickedPlaceMarkerView;
     static List<LocalBeaconPower> beaconPowersListe;
+     BeaconPowerListAdapter beaconPowerListAdapter;
 
 
     @Nullable
@@ -74,7 +75,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         placeList = Utility.getPlaceFromParse(parentActivity.getMapID());
         placeBeacons(beaconList);
         placePlaces(placeList);
-        findBeacon = FindBeacon.getInstance(getActivity());
+        findBeacon = new FindBeacon(getActivity());
 
         return view;
     }
@@ -164,7 +165,7 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         Button updateDialogButton = (Button) dialog.findViewById(R.id.button_update_place);
         final EditText placeNameEditText = (EditText) dialog.findViewById(R.id.editText_place_name);
         final ListView beaconPowerListView = (ListView) dialog.findViewById(R.id.listView_beacon);
-        final BeaconPowerListAdapter beaconPowerListAdapter;
+
         if (place != null) { // it will be edit place dialog
             dialog.setTitle("Edit Place");
             saveDialogButton.setVisibility(View.GONE);
@@ -236,8 +237,12 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                beaconPowerListAdapter.clear();
-                beaconPowerListAdapter.addAll(checkedBeaconPowersListe);
+                checkedBeaconPowersListe =Utility.getBeaconPowers(findBeacon,beaconList);
+                beaconPowerListAdapter=new BeaconPowerListAdapter(getActivity(),checkedBeaconPowersListe);
+                beaconPowerListView.setAdapter(beaconPowerListAdapter);
+
+
+
 
             }
         });
