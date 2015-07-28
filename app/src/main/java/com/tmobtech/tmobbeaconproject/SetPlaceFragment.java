@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
@@ -252,27 +252,24 @@ public class SetPlaceFragment extends Fragment implements View.OnTouchListener {
         place.saveInBackground();
         Toast.makeText(getActivity(), "updated", Toast.LENGTH_LONG).show();
 
-        for (LocalBeaconPower checkedLocalBeaconPower : checkedBeaconPowersListe) {
-            for (LocalBeaconPower localBeaconPower : beaconPowersListe) {
-                if (checkedLocalBeaconPower.getBeaconMacAddress().equals(localBeaconPower.getBeaconMacAddress())) {
-                    if (!checkedLocalBeaconPower.isBeaconIsAdded()) {
-                        ParseQuery<BeaconPower> query = ParseQuery.getQuery(BeaconPower.class);
-                        query.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_BEACON_ID, checkedLocalBeaconPower.getBeaconId());
-                        query.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_PLACE_ID, place.getObjectId());
-                        query.getFirstInBackground(new GetCallback<BeaconPower>() {
-                            @Override
-                            public void done(BeaconPower beaconPower, ParseException e) {
-                                if (e == null) {
-                                    beaconPower.deleteInBackground();
-                                }
-                            }
-                        });
-                    } else {
-                        checkedLocalBeaconPower.toBeaconPower(place.getObjectId()).saveInBackground();
+        ParseQuery<BeaconPower> query = ParseQuery.getQuery(BeaconPower.class);
+        final String placeId = place.getObjectId();
+        query.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_PLACE_ID, placeId);
+        query.findInBackground(new FindCallback<BeaconPower>() {
+            @Override
+            public void done(List<BeaconPower> list, ParseException e) {
+                if (e == null) {
+                    for (BeaconPower beaconPower : list) {
+                        beaconPower.deleteInBackground();
+                    }
+                    for (LocalBeaconPower checkedBeaconPower : checkedBeaconPowersListe) {
+                        if (checkedBeaconPower.isBeaconIsAdded()) {
+                            checkedBeaconPower.toBeaconPower(placeId).saveInBackground();
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
 
