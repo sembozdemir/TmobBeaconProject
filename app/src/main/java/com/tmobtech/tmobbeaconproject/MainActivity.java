@@ -15,11 +15,16 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.tmobtech.tmobbeaconproject.ParseData.Constants;
+import com.tmobtech.tmobbeaconproject.entity.Beacon;
 import com.tmobtech.tmobbeaconproject.entity.BeaconMap;
+import com.tmobtech.tmobbeaconproject.entity.BeaconPower;
+import com.tmobtech.tmobbeaconproject.entity.Place;
 import com.tmobtech.tmobbeaconproject.utility.UserGuideDialog;
 
 import java.util.ArrayList;
@@ -137,8 +142,43 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void deleteMap(int position) {
-
         BeaconMap beaconMap = (BeaconMap) mGridView.getItemAtPosition(position);
+        ParseQuery<Place> parseQueryBeacon=ParseQuery.getQuery("Place");
+        parseQueryBeacon.whereEqualTo(Constants.COLUMN_PLACE_MAP_ID, beaconMap.getObjectId());
+
+        try {
+
+            ParseQuery<Beacon> beaconParseQuery=ParseQuery.getQuery("Beacon");
+            beaconParseQuery.whereEqualTo(Constants.COLUMN_BEACON_MAP_ID,beaconMap.getObjectId());
+            List<Beacon> beaconList=beaconParseQuery.find();
+            for (Beacon beacon:beaconList)
+            {
+                beacon.deleteInBackground();
+            }
+
+
+            List<Place>placeList=parseQueryBeacon.find();
+            for (Place place : placeList)
+            {
+                ParseQuery<BeaconPower> beaconPowerParseQuery= ParseQuery.getQuery("BeaconPower");
+                beaconPowerParseQuery.whereEqualTo(Constants.COLUMN_BEACON_MEASURE_PLACE_ID,place.getObjectId());
+                List<BeaconPower> beaconPowerList=beaconPowerParseQuery.find();
+                for (BeaconPower beaconPower:beaconPowerList)
+                {
+                    beaconPower.delete();
+                }
+
+
+
+
+
+                place.deleteInBackground();
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         beaconMap.deleteInBackground();
     }
