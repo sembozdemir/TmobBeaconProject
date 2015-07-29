@@ -1,6 +1,8 @@
 package com.tmobtech.tmobbeaconproject;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -88,10 +90,21 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
     }
 
     public void setCurrentFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.framePlaceBeacon, fragment, fragment.getClass().getSimpleName())
-                .commit();
+
+
+        SetBeaconFragment setBeaconFragment=(SetBeaconFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentBeacon);
+        SetPlaceFragment setPlaceFragment=(SetPlaceFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentPlace);
+        if (setBeaconFragment==null) {
+
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.framePlaceBeacon, fragment, fragment.getClass().getSimpleName())
+                    .commit();
+        }
+        else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     @Override

@@ -56,7 +56,7 @@ public  FindBeacon(Activity activity){
     @Override
     public void onBeaconServiceConnect() {
 
-Log.e("ConnectedService","ConnectedService");
+Log.e("ConnectedService", "ConnectedService");
         try {
             beaconManager.setRangeNotifier(new RangeNotifier() {
                 @Override
@@ -99,7 +99,14 @@ Log.e("ConnectedService","ConnectedService");
     @Override
     public void unbindService(ServiceConnection serviceConnection) {
 
-        activity.unbindService(serviceConnection);
+        try {
+            activity.unbindService(serviceConnection);
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG,e.getMessage());
+        }
+
     }
 
     @Override
