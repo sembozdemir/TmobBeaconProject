@@ -38,7 +38,6 @@ public class MainActivity extends ActionBarActivity {
     private List<ParseObject> todos;
     private MyGridAdapter myGridAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
