@@ -25,12 +25,9 @@ public class PlaceBeaconActivity extends ActionBarActivity implements View.OnCli
     static String imagePath;
     private String TAG = "PlaceBeaconActivityError";
 
-    private static final int CONTENT_VIEW_ID = 10101010;
-
     private Button buttonPrev;
     private Button buttonNext;
     private FrameLayout frameLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
